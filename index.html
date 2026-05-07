@@ -7,40 +7,236 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; margin: 0; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f3f4f6; margin: 0; overflow-x: hidden; }
         
-        /* Layout */
-        .sidebar { background-color: #0f172a; width: 260px; height: 100vh; position: fixed; left: 0; top: 0; padding: 24px; color: white; z-index: 50; }
-        .main-content { margin-left: 260px; padding: 40px; min-height: 100vh; width: calc(100% - 260px); }
+        /* Layout Structure */
+        .sidebar { background-color: #0f172a; width: 260px; height: 100vh; position: fixed; left: 0; top: 0; color: white; padding: 24px; z-index: 100; }
+        .content { margin-left: 260px; padding: 40px; min-height: 100vh; }
 
         /* Navigation */
-        .nav-link { 
-            display: flex; align-items: center; gap: 12px; padding: 16px; 
-            color: #94a3b8; border-radius: 12px; text-decoration: none; 
-            font-weight: 700; margin-bottom: 8px; cursor: pointer; transition: 0.2s;
-        }
-        .nav-link:hover, .nav-link.active { background-color: #2563eb; color: white; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 14px 18px; color: #94a3b8; text-decoration: none; border-radius: 12px; margin-bottom: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .nav-item:hover { background-color: rgba(37, 99, 235, 0.1); color: white; }
+        .nav-item.active { background-color: #2563eb; color: white; }
 
-        /* Sections */
-        .page-section { display: none; }
-        .page-section:target, .page-section.default { display: block; }
-
-        /* Cards & UI */
-        .card { background: white; border-radius: 24px; padding: 32px; box-shadow: 0 4px 20px -5px rgba(0,0,0,0.05); }
-        .invoice-card { background: #0f172a; border-radius: 24px; color: white; padding: 32px; height: fit-content; }
-        input, select { background-color: #f1f5f9; border: none; border-radius: 12px; padding: 12px; outline: none; width: 100%; }
+        /* UI Cards */
+        .glass-card { background: white; border-radius: 20px; padding: 30px; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        .billing-summary { background: #0f172a; color: white; border-radius: 24px; padding: 30px; height: fit-content; }
         
-        .btn-blue { background-color: #2563eb; color: white; padding: 12px 24px; border-radius: 16px; font-weight: 700; border: none; cursor: pointer; }
+        /* Form Inputs */
+        .input-field { background-color: #f9fafb; border: 1px solid #f3f4f6; border-radius: 12px; padding: 12px 16px; width: 100%; outline: none; transition: 0.3s; }
+        .input-field:focus { border-color: #2563eb; background: white; }
+
+        /* Content Control */
+        .page-section { display: none; animation: fadeIn 0.4s ease-out; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
         <div class="flex items-center gap-3 mb-10 px-2">
-            <div class="bg-blue-600 p-2 rounded-xl"><i class="fas fa-camera text-white"></i></div>
-            <h1 class="text-white font-extrabold tracking-tight">SIGMA STUDIO</h1>
+            <div class="bg-blue-600 p-2.5 rounded-xl shadow-lg shadow-blue-900/20"><i class="fas fa-camera text-white"></i></div>
+            <h1 class="text-white font-extrabold tracking-tight text-lg uppercase">Sigma Studio</h1>
         </div>
         
         <nav>
-            <a href="#dashboard" class="nav-link active" onclick="updateNav(this)"><i class="fas fa-th-large"></i> Dashboard
+            <div onclick="switchPage('dash-page')" id="nav-dash" class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</div>
+            <div onclick="switchPage('bill-page')" id="nav-bill" class="nav-item"><i class="fas fa-shopping-cart"></i> Create Bill</div>
+            <div onclick="switchPage('inv-page')" id="nav-inv" class="nav-item"><i class="fas fa-file-invoice"></i> Invoices</div>
+            <div onclick="switchPage('stock-page')" id="nav-stock" class="nav-item"><i class="fas fa-box"></i> Inventory</div>
+        </nav>
+    </div>
+
+    <div class="content">
+        
+        <header class="flex justify-between items-center mb-10">
+            <div class="relative w-96">
+                <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                <input type="text" placeholder="Search data..." class="w-full pl-12 pr-4 py-3 bg-white border-none rounded-2xl shadow-sm outline-none">
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm"><i class="fas fa-bell text-slate-400"></i></div>
+                <div class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center text-white font-bold">S</div>
+            </div>
+        </header>
+
+        <div id="dash-page" class="page-section active">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-3xl font-extrabold text-slate-800">Dashboard</h2>
+                <button onclick="switchPage('bill-page')" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-blue-600/30 hover:scale-105 transition">
+                    <i class="fas fa-plus mr-2"></i> New Invoice
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 glass-card min-h-[400px] flex flex-col justify-center items-center text-center">
+                    <div class="w-full text-left mb-auto font-bold text-slate-700">Expense Overview</div>
+                    <i class="fas fa-wave-square text-6xl text-slate-100 mb-4"></i>
+                    <p class="text-slate-400 font-medium">No expenses recorded for this month</p>
+                </div>
+
+                <div class="glass-card">
+                    <h3 class="font-bold text-slate-700 mb-8">Sales & Dues <i class="far fa-question-circle text-slate-300 ml-1"></i></h3>
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400 font-bold text-xs uppercase tracking-widest">Today</span>
+                            <span class="font-extrabold text-slate-800" id="dash-today">0.000</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-slate-50 pt-6">
+                            <span class="text-slate-400 font-bold text-xs uppercase tracking-widest">This Week</span>
+                            <span class="font-extrabold text-slate-800">0.000</span>
+                        </div>
+                        <div class="flex justify-between items-center border-t border-slate-50 pt-6">
+                            <span class="text-slate-400 font-bold text-xs uppercase tracking-widest">This Month</span>
+                            <span class="font-extrabold text-slate-800">0.000</span>
+                        </div>
+                    </div>
+                    <button class="w-full mt-10 text-blue-600 font-extrabold text-xs tracking-widest hover:underline uppercase">View Detailed History</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="bill-page" class="page-section">
+            <h2 class="text-3xl font-extrabold text-slate-800 mb-8">Billing Counter</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="glass-card">
+                        <h3 class="font-bold text-slate-700 mb-6 flex items-center gap-2"><i class="far fa-user text-blue-600"></i> Customer Details</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="cust-name" placeholder="Client Name" class="input-field col-span-2">
+                            <input type="text" placeholder="+968 Phone" class="input-field">
+                            <input type="text" placeholder="Location" class="input-field">
+                        </div>
+                    </div>
+                    <div class="glass-card">
+                        <h3 class="font-bold text-slate-700 mb-6 flex items-center gap-2"><i class="fas fa-camera-retro text-blue-600"></i> Add Items to Bill</h3>
+                        <div class="flex gap-4">
+                            <select id="item-sel" class="input-field flex-grow font-semibold text-slate-600">
+                                <option value="0">-- Select an Item --</option>
+                                <option value="15.000">Wedding Portrait Shoot (15.000)</option>
+                                <option value="5.000">Passport Photo Pkg (5.000)</option>
+                                <option value="25.000">Video Editing Project (25.000)</option>
+                            </select>
+                            <button onclick="addToCart()" class="bg-slate-900 text-white px-8 rounded-xl font-bold hover:bg-black">ADD</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="billing-summary">
+                    <h3 class="font-extrabold text-xs tracking-widest mb-10">INVOICE SUMMARY <i class="fas fa-shopping-cart float-right opacity-20"></i></h3>
+                    <div id="cart-box" class="space-y-4 mb-10 min-h-[120px]">
+                        <div class="text-center opacity-30 py-10"><i class="fas fa-shopping-basket text-4xl"></i><p class="text-[10px] font-bold mt-2 uppercase">Cart Empty</p></div>
+                    </div>
+                    <div class="border-t border-slate-800 pt-6 mb-8 flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-500 uppercase">Grand Total</span>
+                        <span class="text-3xl font-black text-blue-500" id="grand-total">0.000</span>
+                    </div>
+                    <button onclick="generateInvoice()" class="w-full bg-blue-600 hover:bg-blue-700 py-4 rounded-2xl font-extrabold shadow-lg shadow-blue-900/40">CONFIRM & GENERATE</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="inv-page" class="page-section">
+            <h2 class="text-3xl font-extrabold mb-8 text-slate-800">Invoice Registry</h2>
+            <div id="registry-list" class="space-y-4">
+                <div class="glass-card text-center py-20 text-slate-300 font-bold uppercase tracking-widest text-xs">No records found</div>
+            </div>
+        </div>
+
+        <div id="stock-page" class="page-section">
+            <h2 class="text-3xl font-extrabold mb-8 text-slate-800">Inventory Management</h2>
+            <div class="glass-card text-center py-20 text-slate-300 font-bold uppercase tracking-widest text-xs">Under Maintenance</div>
+        </div>
+
+    </div>
+
+    <script>
+        let todaySales = 0;
+        let activeCart = [];
+
+        // Tab Switching Logic (Fix for the issue)
+        function switchPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
+            // Remove active style from all nav items
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active');
+            
+            // Set active nav style
+            const navMap = { 'dash-page': 'nav-dash', 'bill-page': 'nav-bill', 'inv-page': 'nav-inv', 'stock-page': 'nav-stock' };
+            document.getElementById(navMap[pageId]).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // Add Item Logic
+        function addToCart() {
+            const sel = document.getElementById('item-sel');
+            const price = parseFloat(sel.value);
+            const name = sel.options[sel.selectedIndex].text.split(' (')[0];
+
+            if(price <= 0) return;
+
+            activeCart.push({ name, price });
+            updateUI();
+        }
+
+        function updateUI() {
+            const box = document.getElementById('cart-box');
+            const totalDisplay = document.getElementById('grand-total');
+            
+            box.innerHTML = '';
+            let currentTotal = 0;
+
+            activeCart.forEach((item, index) => {
+                currentTotal += item.price;
+                box.innerHTML += `
+                    <div class="flex justify-between text-sm font-bold">
+                        <span>${item.name}</span>
+                        <span class="text-blue-400">${item.price.toFixed(3)}</span>
+                    </div>
+                `;
+            });
+
+            totalDisplay.innerText = currentTotal.toFixed(3);
+        }
+
+        // Generate Invoice
+        function generateInvoice() {
+            const amount = parseFloat(document.getElementById('grand-total').innerText);
+            if(amount <= 0) return alert("Empty cart!");
+
+            const name = document.getElementById('cust-name').value || "Guest Customer";
+            
+            // Update Dashboard
+            todaySales += amount;
+            document.getElementById('dash-today').innerText = todaySales.toFixed(3);
+
+            // Add to registry
+            const reg = document.getElementById('registry-list');
+            if(reg.innerText.includes("No records")) reg.innerHTML = '';
+            
+            const item = document.createElement('div');
+            item.className = 'glass-card flex justify-between items-center mb-4 border-l-4 border-blue-500';
+            item.innerHTML = `
+                <div><h4 class="font-bold text-slate-800">${name}</h4><p class="text-xs text-slate-400">Created: Today</p></div>
+                <div class="text-right"><p class="font-black text-slate-800">${amount.toFixed(3)} OMR</p></div>
+            `;
+            reg.prepend(item);
+
+            alert("Invoice Successfully Created!");
+            
+            // Reset & Return
+            activeCart = [];
+            document.getElementById('cust-name').value = '';
+            updateUI();
+            switchPage('dash-page');
+        }
+    </script>
+</body>
+</html>
