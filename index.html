@@ -10,25 +10,28 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; margin: 0; }
         
-        /* SIDEBAR STYLE FROM SCREENSHOT */
-        .sidebar { background-color: #0f172a; width: 280px; height: 100vh; position: fixed; left: 0; top: 0; padding: 24px; color: white; z-index: 100; }
-        .nav-link { display: flex; align-items: center; gap: 12px; padding: 14px 20px; color: #94a3b8; border-radius: 14px; text-decoration: none; font-weight: 600; margin-bottom: 6px; cursor: pointer; transition: 0.2s; }
-        .nav-link:hover, .nav-link.active { background-color: #2563eb; color: white; }
+        /* Sidebar - Exact from Screenshot */
+        .sidebar { background-color: #111827; width: 260px; height: 100vh; position: fixed; left: 0; top: 0; padding: 24px; color: white; }
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: #9ca3af; border-radius: 10px; font-weight: 500; margin-bottom: 4px; cursor: pointer; }
+        .nav-link.active { background-color: #2563eb; color: white; }
+        .nav-link:hover:not(.active) { background-color: rgba(255,255,255,0.05); }
 
-        .main-content { margin-left: 280px; padding: 30px; min-height: 100vh; }
+        .main-content { margin-left: 260px; padding: 40px; }
+        .card { background: white; border-radius: 20px; padding: 24px; border: 1px solid #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         
-        /* WHITE CARDS & TABLES */
-        .card { background: white; border-radius: 24px; padding: 24px; border: 1px solid #f1f5f9; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .stats-table th { color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding-bottom: 15px; }
-        .stats-table td { padding: 16px 0; font-weight: 700; color: #1e293b; border-bottom: 1px solid #f8fafc; }
-        
-        .input-box { background-color: #f9fafb; border: 1.5px solid #eef2f6; border-radius: 12px; padding: 14px; width: 100%; outline: none; transition: 0.3s; }
-        .input-box:focus { border-color: #2563eb; background: white; }
+        /* Table Style - Exact from Screenshot */
+        .stats-table { width: 100%; border-collapse: collapse; }
+        .stats-table th { text-align: left; color: #9ca3af; font-size: 11px; text-transform: uppercase; padding-bottom: 20px; }
+        .stats-table td { padding: 15px 0; font-weight: 700; border-bottom: 1px solid #f8fafc; }
+        .val-sales { color: #111827; text-align: center; }
+        .val-receipts { color: #10b981; text-align: center; }
+        .val-dues { color: #ef4444; text-align: right; }
 
-        .page-section { display: none; animation: fadeIn 0.3s ease; }
+        .page-section { display: none; }
         .page-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
+        
+        .input-box { background-color: #f9fafb; border: 1px solid #f3f4f6; border-radius: 12px; padding: 14px; width: 100%; outline: none; }
+        
         @media print {
             .no-print { display: none !important; }
             #print-receipt { display: block !important; }
@@ -38,21 +41,18 @@
 <body>
 
     <div class="sidebar no-print">
-        <div class="flex items-center gap-3 mb-12 px-2">
-            <div class="bg-blue-600 p-2.5 rounded-xl shadow-lg"><i class="fas fa-camera text-white"></i></div>
-            <div class="flex flex-col leading-tight">
-                <span class="text-white font-extrabold text-lg tracking-tight">SIGMA</span>
-                <span class="text-blue-400 text-[10px] font-bold uppercase tracking-widest">Studio Manager</span>
-            </div>
+        <div class="flex items-center gap-3 mb-10 px-2">
+            <div class="bg-blue-600 p-2 rounded-lg"><i class="fas fa-camera text-white"></i></div>
+            <h1 class="text-white font-bold text-lg">SIGMA STUDIO</h1>
         </div>
         <nav>
             <div onclick="showPage('dashboard')" id="nav-dashboard" class="nav-link active"><i class="fas fa-th-large"></i> Dashboard</div>
-            <div onclick="showPage('billing')" id="nav-billing" class="nav-link"><i class="fas fa-shopping-cart"></i> Billing Counter</div>
-            <div onclick="showPage('invoices')" id="nav-invoices" class="nav-link"><i class="fas fa-file-invoice"></i> Invoice Registry</div>
-            <div onclick="showPage('inventory')" id="nav-inventory" class="nav-link"><i class="fas fa-box"></i> Inventory Hub</div>
+            <div onclick="showPage('billing')" id="nav-billing" class="nav-link"><i class="fas fa-shopping-cart"></i> Create Bill</div>
+            <div onclick="showPage('invoices')" id="nav-invoices" class="nav-link"><i class="fas fa-file-invoice"></i> Invoices</div>
+            <div onclick="showPage('inventory')" id="nav-inventory" class="nav-link"><i class="fas fa-box"></i> Inventory</div>
         </nav>
-        <div class="absolute bottom-8 left-6 right-6">
-            <div class="nav-link"><i class="fas fa-cog text-slate-500"></i> <span class="text-slate-500">Settings</span></div>
+        <div class="absolute bottom-10 left-6 right-6">
+            <div class="nav-link"><i class="fas fa-cog"></i> Settings</div>
         </div>
     </div>
 
@@ -60,115 +60,82 @@
         
         <div id="dashboard" class="page-section active">
             <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-extrabold text-slate-800">Dashboard</h2>
-                <button onclick="showPage('billing')" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-blue-200">
-                    + New Invoice
-                </button>
+                <h2 class="text-3xl font-bold text-slate-900">Dashboard</h2>
+                <button onclick="showPage('billing')" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-blue-200">+ New Invoice</button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-2 card">
-                    <h3 class="font-bold text-slate-700 mb-4">Expense Overview</h3>
-                    <div class="h-64 flex flex-col items-center justify-center border-2 border-dashed border-slate-50 rounded-2xl">
-                        <i class="fas fa-wave-square text-slate-100 text-6xl mb-4"></i>
-                        <p class="text-slate-300 font-bold uppercase text-[10px] tracking-widest">No expenses recorded for this period</p>
+                    <div class="flex justify-between mb-20"><h3 class="font-bold text-slate-800">Expense Overview</h3> <span class="text-xs text-slate-400 font-bold uppercase">This Month <i class="fas fa-chevron-down ml-1"></i></span></div>
+                    <div class="text-center py-20">
+                        <i class="fas fa-wave-square text-slate-100 text-5xl mb-4"></i>
+                        <p class="text-slate-300 text-xs font-bold italic">No expenses recorded for this period</p>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3 class="font-bold text-slate-700 mb-6 flex items-center justify-between">
-                        Sales & Dues <i class="far fa-question-circle text-slate-200 text-sm"></i>
-                    </h3>
-                    <table class="w-full stats-table">
+                    <h3 class="font-bold text-slate-800 mb-8 flex items-center gap-2">Sales & Dues <i class="far fa-question-circle text-slate-200"></i></h3>
+                    <table class="stats-table">
                         <thead>
-                            <tr><th class="text-left">Period</th><th class="text-right">Sales</th></tr>
+                            <tr><th>Period</th><th class="text-center">Sales</th><th class="text-center">Receipts</th><th class="text-right">Dues</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td class="text-slate-400">Today</td><td class="text-right font-black" id="dash-today">0.000</td></tr>
-                            <tr><td class="text-slate-400">This Week</td><td class="text-right font-black">0.000</td></tr>
-                            <tr><td class="text-slate-400">This Month</td><td class="text-right font-black">0.000</td></tr>
-                            <tr><td class="text-slate-400">This Year</td><td class="text-right font-black">0.000</td></tr>
+                            <tr><td class="text-slate-400">Today</td><td class="val-sales" id="d-today">0.000</td><td class="val-receipts">0.000</td><td class="val-dues">0.000</td></tr>
+                            <tr><td class="text-slate-400">This Week</td><td class="val-sales">0.000</td><td class="val-receipts">0.000</td><td class="val-dues">0.000</td></tr>
+                            <tr><td class="text-slate-400">This Month</td><td class="val-sales">0.000</td><td class="val-receipts">0.000</td><td class="val-dues">0.000</td></tr>
+                            <tr><td class="text-slate-400">This Quarter</td><td class="val-sales">0.000</td><td class="val-receipts">0.000</td><td class="val-dues">0.000</td></tr>
+                            <tr><td class="text-slate-400 border-none">This Year</td><td class="val-sales border-none">0.000</td><td class="val-receipts border-none">0.000</td><td class="val-dues border-none">0.000</td></tr>
                         </tbody>
                     </table>
-                    <button class="w-full mt-8 text-blue-600 font-bold text-xs uppercase tracking-widest">View Detailed History →</button>
+                    <button class="w-full mt-10 text-blue-600 font-bold text-[11px] uppercase tracking-widest">View Detailed History <i class="fas fa-arrow-right ml-1"></i></button>
                 </div>
             </div>
         </div>
 
         <div id="billing" class="page-section">
-            <h2 class="text-3xl font-extrabold text-slate-800 mb-8">Billing Counter</h2>
+            <h2 class="text-3xl font-bold text-slate-900 mb-8">Billing Counter</h2>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-2 space-y-6">
                     <div class="card">
-                        <div class="flex items-center gap-2 text-blue-600 mb-6"><i class="far fa-user"></i> <h3 class="font-bold text-slate-800">Customer Details</h3></div>
+                        <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2 text-blue-600"><i class="far fa-user"></i> Customer Details</h3>
                         <div class="grid grid-cols-2 gap-4">
                             <input id="cName" type="text" placeholder="Client Name" class="input-box col-span-2">
-                            <input id="cPhone" type="text" placeholder="+968 Phone" class="input-box">
-                            <input type="text" placeholder="Location" class="input-box">
+                            <input id="cPhone" type="text" placeholder="+968" class="input-box">
+                            <input type="text" placeholder="Address / Location" class="input-box">
                         </div>
                     </div>
                     <div class="card">
-                        <div class="flex items-center gap-2 text-blue-600 mb-6"><i class="fas fa-plus-circle"></i> <h3 class="font-bold text-slate-800">Add Items to Bill</h3></div>
+                        <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2 text-blue-600"><i class="fas fa-box-open"></i> Add Items to Bill</h3>
                         <div class="flex gap-4">
-                            <select id="itemSel" class="input-box flex-grow font-semibold text-slate-600">
-                                <option value="0">-- Select an Item --</option>
-                                <option value="15.000">Wedding Photography (15.000)</option>
-                                <option value="5.000">Passport Photo (5.000)</option>
-                                <option value="10.000">Editing/Restoration (10.000)</option>
-                            </select>
-                            <input id="itemQty" type="number" value="1" class="input-box w-24 text-center font-bold">
-                            <button onclick="addToBill()" class="bg-slate-900 text-white px-8 rounded-xl font-bold hover:bg-black transition">ADD</button>
+                            <select id="itemSel" class="input-box flex-grow"><option value="0">-- Select an Item --</option><option value="15.000">Wedding Shoot (15.000)</option><option value="5.000">Passport Photo (5.000)</option></select>
+                            <input id="itemQty" type="number" value="1" class="input-box w-20 text-center">
+                            <button onclick="addToBill()" class="bg-[#111827] text-white px-8 rounded-xl font-bold">ADD</button>
                         </div>
                     </div>
                 </div>
-
-                <div class="card bg-[#0f172a] text-white">
-                    <h3 class="font-extrabold text-xs tracking-widest mb-10 opacity-50 uppercase">Invoice Summary <i class="fas fa-shopping-cart ml-2"></i></h3>
-                    <div id="cartList" class="space-y-4 mb-10 min-h-[120px]">
-                        <div class="flex flex-col items-center py-10 opacity-20"><i class="fas fa-shopping-basket text-4xl mb-3"></i><p class="text-[10px] font-bold">EMPTY CART</p></div>
+                <div class="card bg-[#111827] text-white flex flex-col">
+                    <div class="flex justify-between items-center mb-10"><h3 class="font-bold text-xs uppercase tracking-widest">Invoice Summary</h3><i class="fas fa-shopping-cart"></i></div>
+                    <div id="cartItems" class="flex-grow space-y-4 py-10 text-center opacity-20"><i class="fas fa-shopping-basket text-4xl mb-2"></i><p class="text-[10px] font-bold">Empty Cart</p></div>
+                    <div class="border-t border-slate-800 pt-6 mt-10">
+                        <div class="flex justify-between items-end mb-8"><span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Grand Total</span><span class="text-3xl font-black text-blue-500" id="gTotal">0.000</span></div>
+                        <button onclick="finishBill()" class="w-full bg-[#64748b] py-4 rounded-2xl font-bold uppercase text-xs tracking-widest">Confirm & Generate</button>
                     </div>
-                    <div class="border-t border-slate-800 pt-6 mb-8 flex justify-between items-center">
-                        <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">Grand Total</span>
-                        <span class="text-3xl font-black text-blue-500" id="grandTotal">0.000</span>
-                    </div>
-                    <button onclick="confirmBill()" class="w-full bg-blue-600 py-4 rounded-2xl font-black shadow-xl hover:bg-blue-700 active:scale-[0.98] transition">CONFIRM & GENERATE</button>
                 </div>
-            </div>
-        </div>
-
-        <div id="invoices" class="page-section">
-            <h2 class="text-3xl font-extrabold text-slate-800 mb-8">Invoice Registry</h2>
-            <div id="regList" class="card min-h-[400px] flex flex-col items-center justify-center">
-                <i class="far fa-file-alt text-6xl text-slate-100 mb-4"></i>
-                <p class="text-slate-300 font-bold uppercase text-[10px] tracking-widest">No invoices found in registry</p>
             </div>
         </div>
 
     </div>
 
     <div id="print-receipt" class="hidden p-10 bg-white">
-        <center>
-            <h1 class="text-2xl font-black">SIGMA STUDIO</h1>
-            <p class="text-sm">Salalah, Oman | Professional Digital Media</p>
-            <hr class="my-6 border-black">
-        </center>
-        <div class="flex justify-between mb-8 text-sm">
-            <div><p>Customer: <b id="pName"></b></p><p>Phone: <span id="pPhone"></span></p></div>
-            <div class="text-right"><p>Date: <span id="pDate"></span></p><p>Bill No: #<span id="pID"></span></p></div>
-        </div>
-        <table class="w-full mb-8">
-            <thead class="border-b-2 border-black text-left">
-                <tr><th class="py-2">Service Description</th><th class="text-right">Amount (OMR)</th></tr>
-            </thead>
-            <tbody id="pItems"></tbody>
-        </table>
-        <h2 class="text-right text-2xl font-black">TOTAL: <span id="pTotal"></span> OMR</h2>
-        <p class="text-center mt-20 text-[10px] font-bold">Thank you for your business!</p>
+        <center><h1 class="text-2xl font-black">SIGMA STUDIO</h1><hr class="my-6"></center>
+        <div class="flex justify-between mb-8"><p>Customer: <b id="pName"></b></p><p>Date: <span id="pDate"></span></p></div>
+        <table class="w-full mb-8 border-b-2 border-black text-left"><thead><tr><th class="pb-2">Description</th><th class="text-right pb-2">Amount</th></tr></thead><tbody id="pList"></tbody></table>
+        <h2 class="text-right text-2xl font-black">Total: <span id="pTotal"></span> OMR</h2>
     </div>
 
     <script>
-        let todaySales = 0;
-        let activeCart = [];
+        let todayVal = 0;
+        let cart = [];
 
         function showPage(id) {
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
@@ -181,65 +148,37 @@
             const sel = document.getElementById('itemSel');
             const qty = parseInt(document.getElementById('itemQty').value) || 1;
             const price = parseFloat(sel.value);
-            const name = sel.options[sel.selectedIndex].text.split(' (')[0];
-            
             if(price <= 0) return;
-            activeCart.push({ name, price: price * qty });
-            updateCartUI();
+            cart.push({ name: sel.options[sel.selectedIndex].text.split(' (')[0], price: price * qty });
+            updateCart();
         }
 
-        function updateCartUI() {
-            const box = document.getElementById('cartList');
-            const totalDisplay = document.getElementById('grandTotal');
+        function updateCart() {
+            const box = document.getElementById('cartItems');
             box.innerHTML = '';
-            let total = 0;
-            activeCart.forEach(i => {
-                total += i.price;
-                box.innerHTML += `<div class="flex justify-between font-bold"><span>${i.name}</span><span class="text-blue-400">${i.price.toFixed(3)}</span></div>`;
+            let t = 0;
+            cart.forEach(i => {
+                t += i.price;
+                box.innerHTML += `<div class="flex justify-between text-sm font-bold"><span>${i.name}</span><span class="text-blue-400">${i.price.toFixed(3)}</span></div>`;
             });
-            totalDisplay.innerText = total.toFixed(3);
+            document.getElementById('gTotal').innerText = t.toFixed(3);
         }
 
-        function confirmBill() {
-            const total = parseFloat(document.getElementById('grandTotal').innerText);
-            if(total <= 0) return alert("Add items first");
-
-            const name = document.getElementById('cName').value || "Guest Customer";
-            const phone = document.getElementById('cPhone').value || "-";
-
-            // Update Print Data
-            document.getElementById('pName').innerText = name;
-            document.getElementById('pPhone').innerText = phone;
+        function finishBill() {
+            const total = parseFloat(document.getElementById('gTotal').innerText);
+            if(total <= 0) return;
+            document.getElementById('pName').innerText = document.getElementById('cName').value || "Walking Customer";
             document.getElementById('pDate').innerText = new Date().toLocaleString();
-            document.getElementById('pID').innerText = Math.floor(1000 + Math.random() * 9000);
             document.getElementById('pTotal').innerText = total.toFixed(3);
+            const list = document.getElementById('pList');
+            list.innerHTML = '';
+            cart.forEach(i => { list.innerHTML += `<tr><td class="py-2">${i.name}</td><td class="text-right font-bold">${i.price.toFixed(3)}</td></tr>`; });
             
-            const pItems = document.getElementById('pItems');
-            pItems.innerHTML = '';
-            activeCart.forEach(i => {
-                pItems.innerHTML += `<tr class="border-b border-slate-100"><td class="py-3">${i.name}</td><td class="text-right font-bold">${i.price.toFixed(3)}</td></tr>`;
-            });
-
-            // Update Dashboard
-            todaySales += total;
-            document.getElementById('dash-today').innerText = todaySales.toFixed(3);
-
-            // Update Registry
-            const reg = document.getElementById('regList');
-            if(reg.innerText.includes("No invoices")) reg.innerHTML = '';
-            const row = document.createElement('div');
-            row.className = "flex justify-between items-center w-full p-4 mb-3 bg-slate-50 rounded-xl border border-slate-100";
-            row.innerHTML = `<div><b class="text-slate-800">${name}</b><p class="text-[10px] text-slate-400 font-bold">${new Date().toLocaleTimeString()}</p></div><b class="text-slate-800">${total.toFixed(3)} OMR</b>`;
-            reg.prepend(row);
-
-            // Execute Print
+            todayVal += total;
+            document.getElementById('d-today').innerText = todayVal.toFixed(3);
+            
             window.print();
-
-            // Reset
-            activeCart = [];
-            document.getElementById('cName').value = '';
-            updateCartUI();
-            showPage('dashboard');
+            cart = []; updateCart(); showPage('dashboard');
         }
     </script>
 </body>
