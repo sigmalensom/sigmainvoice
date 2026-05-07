@@ -10,45 +10,47 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; margin: 0; }
         
-        .sidebar { background-color: #0f172a; width: 260px; height: 100vh; position: fixed; left: 0; top: 0; padding: 24px; color: white; }
-        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 18px; color: #94a3b8; border-radius: 12px; font-weight: 600; margin-bottom: 8px; cursor: pointer; }
-        .nav-link.active { background-color: #2563eb; color: white; }
+        /* SIDEBAR */
+        .sidebar { background-color: #0f172a; width: 260px; height: 100vh; position: fixed; left: 0; top: 0; padding: 24px; color: white; border-right: 1px solid #1e293b; }
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 18px; color: #94a3b8; border-radius: 12px; font-weight: 600; margin-bottom: 8px; cursor: pointer; transition: all 0.2s; }
+        .nav-link.active { background-color: #2563eb; color: white; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); }
+        .nav-link:hover:not(.active) { background-color: rgba(255,255,255,0.05); color: white; }
 
         .main-content { margin-left: 260px; padding: 40px; }
-        .card { background: white; border-radius: 24px; padding: 24px; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.02); position: relative; }
         
-        .stat-icon { background: #eff6ff; color: #2563eb; width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
-        .live-badge { position: absolute; top: 24px; right: 24px; color: #94a3b8; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; }
-
-        .stats-table { width: 100%; border-collapse: collapse; }
-        .stats-table th { text-align: left; color: #94a3b8; font-size: 11px; font-weight: 800; text-transform: uppercase; padding-bottom: 24px; border-bottom: 1px solid #f8fafc; }
-        .stats-table td { padding: 20px 0; font-weight: 700; font-size: 14px; color: #1e293b; border-bottom: 1px solid #f8fafc; }
+        /* CARDS & UI ELEMENTS */
+        .card { background: white; border-radius: 24px; padding: 24px; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        .input-field { background-color: #f8fafc; border: 1px solid #f1f5f9; border-radius: 16px; padding: 14px 20px; width: 100%; outline: none; font-size: 14px; font-weight: 500; color: #475569; }
+        .input-field::placeholder { color: #cbd5e1; }
         
-        .val-green { color: #10b981; }
-        .val-red { color: #ef4444; }
+        /* BILLING SUMMARY CARD */
+        .summary-card { background: #fff; border-radius: 30px; border: 1px solid #f1f5f9; box-shadow: 0 10px 40px rgba(0,0,0,0.05); overflow: hidden; }
+        .summary-header { background: #0f172a; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
 
         .page-section { display: none; }
         .page-section.active { display: block; }
+        
+        .btn-add { background: #0f172a; color: white; padding: 0 30px; border-radius: 12px; font-weight: 700; font-size: 12px; letter-spacing: 1px; }
+        .btn-confirm { background: #94a3b8; color: white; width: 100%; padding: 16px; border-radius: 18px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 13px; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="flex items-center gap-3 mb-10 px-2">
-            <div class="bg-blue-600 p-2 rounded-xl"><i class="fas fa-camera text-white"></i></div>
+        <div class="flex items-center gap-3 mb-12 px-2">
+            <div class="bg-blue-600 p-2.5 rounded-xl"><i class="fas fa-camera text-white"></i></div>
             <div>
-                <h1 class="text-white font-extrabold leading-tight">SIGMA</h1>
-                <p class="text-[10px] text-blue-400 font-bold tracking-widest">STUDIO MANAGER</p>
+                <h1 class="text-white font-extrabold text-lg leading-tight">SIGMA STUDIO</h1>
             </div>
         </div>
         <nav>
-            <div onclick="showPage('dashboard')" id="nav-dashboard" class="nav-link active"><i class="fas fa-th-large"></i> Dashboard</div>
-            <div onclick="showPage('billing')" id="nav-billing" class="nav-link"><i class="fas fa-shopping-cart"></i> Billing Counter</div>
-            <div onclick="showPage('invoices')" id="nav-invoices" class="nav-link"><i class="fas fa-file-invoice"></i> Invoice Registry</div>
-            <div onclick="showPage('inventory')" id="nav-inventory" class="nav-link"><i class="fas fa-box"></i> Inventory Hub</div>
+            <div onclick="showPage('dashboard')" id="nav-dashboard" class="nav-link active"><i class="fas fa-th-large w-5 text-center"></i> Dashboard</div>
+            <div onclick="showPage('billing')" id="nav-billing" class="nav-link"><i class="fas fa-shopping-cart w-5 text-center"></i> Create Bill</div>
+            <div onclick="showPage('invoices')" id="nav-invoices" class="nav-link"><i class="fas fa-file-invoice w-5 text-center"></i> Invoices</div>
+            <div onclick="showPage('inventory')" id="nav-inventory" class="nav-link"><i class="fas fa-box w-5 text-center"></i> Inventory</div>
         </nav>
-        <div class="absolute bottom-8 left-6 right-6">
-            <div class="nav-link"><i class="fas fa-cog"></i> Preferences</div>
+        <div class="absolute bottom-8 left-6 right-6 pt-6 border-t border-slate-800/50">
+            <div class="nav-link"><i class="fas fa-cog w-5 text-center"></i> Settings</div>
         </div>
     </div>
 
@@ -56,95 +58,89 @@
         
         <div id="dashboard" class="page-section active">
             <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="text-3xl font-extrabold text-slate-800">Dashboard</h2>
-                    <p class="text-slate-400 font-medium">Overview of your studio's performance</p>
-                </div>
-                <button class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-blue-200">+ New Invoice</button>
+                <h2 class="text-3xl font-extrabold text-slate-900">Dashboard</h2>
+                <button onclick="showPage('billing')" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-blue-200">+ New Invoice</button>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                <div class="card">
-                    <span class="live-badge">Live</span>
-                    <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
-                    <p class="text-slate-400 text-xs font-bold mb-1">Yearly Sales</p>
-                    <h3 class="text-2xl font-black text-slate-800">OMR 0.000</h3>
-                </div>
-                <div class="card">
-                    <span class="live-badge">Live</span>
-                    <div class="stat-icon"><i class="fas fa-chart-bar"></i></div>
-                    <p class="text-slate-400 text-xs font-bold mb-1">Monthly Revenue</p>
-                    <h3 class="text-2xl font-black text-slate-800">OMR 0.000</h3>
-                </div>
-                <div class="card">
-                    <span class="live-badge">Live</span>
-                    <div class="stat-icon text-orange-500 bg-orange-50"><i class="fas fa-exclamation-circle"></i></div>
-                    <p class="text-slate-400 text-xs font-bold mb-1">Pending Payments</p>
-                    <h3 class="text-2xl font-black text-slate-800">OMR 0.000</h3>
-                </div>
-                <div class="card">
-                    <span class="live-badge">Live</span>
-                    <div class="stat-icon text-slate-500 bg-slate-50"><i class="fas fa-box"></i></div>
-                    <p class="text-slate-400 text-xs font-bold mb-1">Low Stock Assets</p>
-                    <h3 class="text-2xl font-black text-slate-800">0 Items</h3>
-                </div>
             </div>
-
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-2 card">
-                    <h3 class="font-bold text-slate-800 mb-8 flex items-center gap-2">Revenue Breakdown <i class="far fa-question-circle text-slate-200 text-sm"></i></h3>
-                    <table class="stats-table">
-                        <thead>
-                            <tr>
-                                <th>Time Period</th>
-                                <th class="text-center">Gross Sales</th>
-                                <th class="text-center">Collected</th>
-                                <th class="text-right">Outstanding</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-slate-400">Today</td>
-                                <td class="text-center">0.000</td>
-                                <td class="text-center val-green">+0.000</td>
-                                <td class="text-right val-red">0.000</td>
-                            </tr>
-                            <tr>
-                                <td class="text-slate-400">This Week</td>
-                                <td class="text-center">0.000</td>
-                                <td class="text-center val-green">+0.000</td>
-                                <td class="text-right val-red">0.000</td>
-                            </tr>
-                            <tr>
-                                <td class="text-slate-400">This Month</td>
-                                <td class="text-center">0.000</td>
-                                <td class="text-center val-green">+0.000</td>
-                                <td class="text-right val-red">0.000</td>
-                            </tr>
-                            <tr>
-                                <td class="text-slate-400">This Year</td>
-                                <td class="text-center">0.000</td>
-                                <td class="text-center val-green">+0.000</td>
-                                <td class="text-right val-red">0.000</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="card flex flex-col items-center justify-center text-center">
-                    <h3 class="font-bold text-slate-800 absolute top-6 left-6">Recent Invoices</h3>
-                    <div class="opacity-20">
-                        <i class="fas fa-file-invoice text-5xl mb-4"></i>
-                        <p class="text-xs font-bold italic uppercase tracking-widest">No recent transactions</p>
-                    </div>
-                    <button class="absolute bottom-6 text-blue-600 font-extrabold text-[11px] uppercase tracking-widest">View All History</button>
-                </div>
-            </div>
-        </div>
 
         <div id="billing" class="page-section">
-            <h2 class="text-3xl font-extrabold text-slate-800">Billing Counter</h2>
+            <h2 class="text-3xl font-extrabold text-slate-900 mb-10">Billing Counter</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                <div class="lg:col-span-8 space-y-8">
+                    <div class="card">
+                        <div class="flex items-center gap-3 mb-8">
+                            <i class="far fa-user text-blue-500 text-lg"></i>
+                            <h3 class="font-bold text-slate-800">Customer Details</h3>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <input type="text" placeholder="Client Name" class="input-field md:col-span-2">
+                            <input type="text" placeholder="+968" class="input-field">
+                            <input type="text" placeholder="Address / Location" class="input-field">
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="flex items-center gap-3 mb-8">
+                            <i class="fas fa-box-open text-blue-500 text-lg"></i>
+                            <h3 class="font-bold text-slate-800">Add Items to Bill</h3>
+                        </div>
+                        <div class="flex gap-4">
+                            <select class="input-field flex-grow appearance-none">
+                                <option>-- Select an Item --</option>
+                            </select>
+                            <div class="relative w-24">
+                                <span class="absolute -top-6 left-0 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Qty</span>
+                                <input type="number" value="1" class="input-field text-center">
+                            </div>
+                            <button class="btn-add">ADD</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-4">
+                    <div class="summary-card">
+                        <div class="summary-header">
+                            <h4 class="text-[11px] font-bold tracking-widest uppercase">Invoice Summary</h4>
+                            <i class="fas fa-shopping-cart text-sm"></i>
+                        </div>
+                        <div class="p-8">
+                            <div class="py-20 flex flex-col items-center justify-center text-slate-200">
+                                <i class="fas fa-shopping-basket text-4xl mb-4"></i>
+                                <p class="text-[10px] font-bold uppercase tracking-widest">Empty Cart</p>
+                            </div>
+                            
+                            <div class="border-t border-slate-100 pt-6 mt-6">
+                                <div class="flex justify-between items-end mb-8">
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Grand Total</span>
+                                    <span class="text-3xl font-black text-blue-600">0.000</span>
+                                </div>
+                                <div class="grid grid-cols-2 gap-3 mb-6">
+                                    <select class="input-field text-[11px] font-bold py-2"><option>MARK PAID</option></select>
+                                    <select class="input-field text-[11px] font-bold py-2"><option>CASH</option></select>
+                                </div>
+                                <button class="btn-confirm">Confirm & Generate</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
+
+        <div id="invoices" class="page-section">
+            <h2 class="text-3xl font-extrabold text-slate-900 mb-10">Invoice Registry</h2>
+            <div class="card min-h-[400px] flex flex-col items-center justify-center text-center">
+                <i class="far fa-file-alt text-5xl text-slate-100 mb-4"></i>
+                <p class="text-slate-300 font-medium">No invoices found in registry</p>
+            </div>
+        </div>
+
+        <div id="inventory" class="page-section">
+             <h2 class="text-3xl font-extrabold text-slate-900 mb-10">Inventory Management</h2>
+             </div>
+
     </div>
 
     <script>
