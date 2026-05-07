@@ -157,4 +157,309 @@
 </script>
 
 </body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigma Studio Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .sidebar { background-color: #0f172a; min-height: 100vh; transition: all 0.3s; }
+        .nav-item { color: #94a3b8; transition: 0.2s; cursor: pointer; }
+        .nav-item:hover, .nav-item.active { color: white; background-color: #2563eb; border-radius: 8px; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        .section { display: none; }
+        .section.active { display: block; }
+    </style>
+</head>
+<body>
+
+<div class="flex">
+    <div class="sidebar w-64 p-5 fixed h-full">
+        <div class="flex items-center space-x-3 mb-10 p-2 bg-blue-600 rounded-lg">
+            <i class="fas fa-camera text-white text-xl"></i>
+            <span class="text-white font-bold text-lg">SIGMA STUDIO</span>
+        </div>
+        
+        <nav class="space-y-2">
+            <div onclick="showSection('dashboard')" id="nav-dashboard" class="nav-item active p-3 flex items-center space-x-3">
+                <i class="fas fa-th-large w-5"></i> <span>Dashboard</span>
+            </div>
+            <div onclick="showSection('billing')" id="nav-billing" class="nav-item p-3 flex items-center space-x-3">
+                <i class="fas fa-shopping-cart w-5"></i> <span>Create Bill</span>
+            </div>
+            <div onclick="showSection('invoices')" id="nav-invoices" class="nav-item p-3 flex items-center space-x-3">
+                <i class="fas fa-file-invoice w-5"></i> <span>Invoices</span>
+            </div>
+            <div onclick="showSection('inventory')" id="nav-inventory" class="nav-item p-3 flex items-center space-x-3">
+                <i class="fas fa-box w-5"></i> <span>Inventory</span>
+            </div>
+        </nav>
+
+        <div onclick="showSection('settings')" id="nav-settings" class="absolute bottom-10 left-5 nav-item p-3 flex items-center space-x-3 w-52">
+            <i class="fas fa-cog"></i> <span>Settings</span>
+        </div>
+    </div>
+
+    <div class="ml-64 w-full p-8">
+        
+        <div id="dashboard" class="section active">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-slate-800">Dashboard</h1>
+                <button onclick="showSection('billing')" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">+ New Invoice</button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card p-6 min-h-[300px]">
+                    <p class="font-semibold mb-2 text-slate-700 w-full text-left">Recent Activity</p>
+                    <div id="activity-log" class="text-slate-400 text-sm italic py-10 text-center">No recent invoices found</div>
+                </div>
+                
+                <div class="card p-6">
+                    <h3 class="font-bold text-slate-700 mb-4">Sales Summary</h3>
+                    <div class="text-center py-5">
+                        <p class="text-slate-500 text-sm">Total Revenue</p>
+                        <h2 id="total-revenue-display" class="text-4xl font-bold text-blue-600">0.000 OMR</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="billing" class="section">
+            <h1 class="text-3xl font-bold text-slate-800 mb-8">Billing Counter</h1>
+            <div class="grid grid-cols-3 gap-6">
+                <div class="col-span-2 space-y-6">
+                    <div class="card p-6">
+                        <h3 class="text-blue-600 font-bold mb-4 flex items-center"><i class="fas fa-user mr-2"></i> Customer Details</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input id="cust-name" type="text" placeholder="Client Name" class="p-3 bg-slate-50 border rounded-lg outline-none">
+                            <input id="cust-phone" type="text" placeholder="+968 Phone" class="p-3 bg-slate-50 border rounded-lg outline-none">
+                        </div>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="text-blue-600 font-bold mb-4 flex items-center"><i class="fas fa-box mr-2"></i> Add Items to Bill</h3>
+                        <div class="flex space-x-4">
+                            <select id="bill-item-select" class="flex-1 p-3 bg-slate-50 border rounded-lg">
+                                <option value="">-- Select Item --</option>
+                            </select>
+                            <input id="bill-qty" type="number" value="1" min="1" class="w-20 p-3 bg-slate-50 border rounded-lg text-center">
+                            <button onclick="addToBill()" class="bg-slate-900 text-white px-8 rounded-lg">ADD</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-6 h-fit text-center border-t-8 border-slate-900">
+                    <h3 class="font-bold mb-10 text-slate-800">INVOICE SUMMARY <i class="fas fa-shopping-cart ml-2"></i></h3>
+                    <div id="bill-summary-list" class="text-sm space-y-2 mb-10 text-left min-h-[100px]">
+                        <p class="text-slate-300 text-center py-10">Empty Cart</p>
+                    </div>
+                    <div class="border-t pt-4 flex justify-between items-center mb-6">
+                        <span class="font-bold text-slate-500">GRAND TOTAL</span>
+                        <span id="grand-total-display" class="text-2xl font-bold text-blue-600">0.000</span>
+                    </div>
+                    <button id="btn-generate" onclick="generateFinalInvoice()" class="w-full bg-slate-400 text-white py-3 rounded-lg" disabled>CONFIRM & GENERATE</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="invoices" class="section">
+            <h1 class="text-3xl font-bold text-slate-800 mb-8">Invoice Registry</h1>
+            <div id="registry-container" class="space-y-4">
+                <div class="card p-20 flex flex-col items-center justify-center text-slate-400">
+                    <i class="fas fa-file-invoice text-5xl mb-4 opacity-20"></i>
+                    <p>No invoices found in registry</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="inventory" class="section">
+            <h1 class="text-3xl font-bold text-slate-800 mb-8">Inventory Management</h1>
+            <div class="grid grid-cols-4 gap-6">
+                <div class="col-span-3 card p-6">
+                    <table class="w-full text-sm text-left">
+                        <thead class="border-b text-slate-400">
+                            <tr><th class="py-2">ITEM NAME</th><th class="py-2">PRICE</th><th class="py-2">STOCK</th></tr>
+                        </thead>
+                        <tbody id="inventory-list-body">
+                            </tbody>
+                    </table>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-blue-600 font-bold mb-4">+ Add Stock</h3>
+                    <input id="inv-name" type="text" placeholder="Item Name" class="w-full p-2 mb-3 bg-slate-50 border rounded">
+                    <input id="inv-price" type="number" placeholder="Price (OMR)" class="w-full p-2 mb-3 bg-slate-50 border rounded">
+                    <input id="inv-stock" type="number" placeholder="Initial Stock" class="w-full p-2 mb-3 bg-slate-50 border rounded">
+                    <button onclick="addNewItemToInventory()" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Add to Assets</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="settings" class="section">
+            <h1 class="text-3xl font-bold text-slate-800 mb-8">Settings</h1>
+            <div class="card p-6 max-w-md">
+                <h3 class="font-bold mb-4">System Controls</h3>
+                <button onclick="resetData()" class="bg-red-100 text-red-600 px-4 py-2 rounded hover:bg-red-200">Clear All Data</button>
+                <p class="text-xs text-slate-400 mt-2">This will delete all invoices and inventory.</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    // Data storage (Local Storage keeps data even after refresh)
+    let inventory = JSON.parse(localStorage.getItem('sigma_inv')) || [];
+    let invoices = JSON.parse(localStorage.getItem('sigma_bills')) || [];
+    let currentCart = [];
+
+    function showSection(sectionId) {
+        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        document.getElementById(sectionId).classList.add('active');
+        const nav = document.getElementById('nav-' + sectionId);
+        if(nav) nav.classList.add('active');
+        
+        if(sectionId === 'inventory') renderInventory();
+        if(sectionId === 'billing') updateBillingDropdown();
+        if(sectionId === 'invoices') renderRegistry();
+        if(sectionId === 'dashboard') updateDashboard();
+    }
+
+    // --- INVENTORY LOGIC ---
+    function addNewItemToInventory() {
+        const name = document.getElementById('inv-name').value;
+        const price = document.getElementById('inv-price').value;
+        const stock = document.getElementById('inv-stock').value;
+
+        if(!name || !price) return alert("Please enter Name and Price");
+
+        inventory.push({ name, price: parseFloat(price).toFixed(3), stock: parseInt(stock) || 0 });
+        saveData();
+        renderInventory();
+        
+        // Clear inputs
+        document.getElementById('inv-name').value = '';
+        document.getElementById('inv-price').value = '';
+        document.getElementById('inv-stock').value = '';
+    }
+
+    function renderInventory() {
+        const body = document.getElementById('inventory-list-body');
+        body.innerHTML = inventory.length ? '' : '<tr><td colspan="3" class="text-center py-10 text-slate-400">No items found</td></tr>';
+        inventory.forEach(item => {
+            body.innerHTML += `<tr class="border-b text-slate-700"><td class="py-3">${item.name}</td><td>${item.price}</td><td>${item.stock}</td></tr>`;
+        });
+    }
+
+    // --- BILLING LOGIC ---
+    function updateBillingDropdown() {
+        const select = document.getElementById('bill-item-select');
+        select.innerHTML = '<option value="">-- Select Item --</option>';
+        inventory.forEach((item, index) => {
+            select.innerHTML += `<option value="${index}">${item.name} (${item.price} OMR)</option>`;
+        });
+    }
+
+    function addToBill() {
+        const idx = document.getElementById('bill-item-select').value;
+        const qty = parseInt(document.getElementById('bill-qty').value);
+        if(idx === "") return;
+
+        const item = inventory[idx];
+        currentCart.push({ name: item.name, price: item.price, qty: qty, total: (item.price * qty).toFixed(3) });
+        renderCart();
+    }
+
+    function renderCart() {
+        const container = document.getElementById('bill-summary-list');
+        const btn = document.getElementById('btn-generate');
+        container.innerHTML = '';
+        let grandTotal = 0;
+
+        currentCart.forEach(item => {
+            grandTotal += parseFloat(item.total);
+            container.innerHTML += `<div class="flex justify-between border-b py-2">
+                <span>${item.name} (x${item.qty})</span>
+                <span class="font-bold">${item.total}</span>
+            </div>`;
+        });
+
+        document.getElementById('grand-total-display').innerText = grandTotal.toFixed(3);
+        if(currentCart.length > 0) {
+            btn.classList.replace('bg-slate-400', 'bg-blue-600');
+            btn.disabled = false;
+        }
+    }
+
+    function generateFinalInvoice() {
+        const customer = document.getElementById('cust-name').value || "Walking Customer";
+        const total = document.getElementById('grand-total-display').innerText;
+        
+        const newInvoice = {
+            id: 'INV-' + (invoices.length + 1001),
+            customer: customer,
+            total: total,
+            date: new Date().toLocaleDateString(),
+            items: [...currentCart]
+        };
+
+        invoices.push(newInvoice);
+        saveData();
+        alert("Invoice Saved Successfully!");
+        
+        // Reset billing
+        currentCart = [];
+        document.getElementById('cust-name').value = '';
+        document.getElementById('cust-phone').value = '';
+        renderCart();
+        showSection('invoices');
+    }
+
+    // --- REGISTRY & DASHBOARD ---
+    function renderRegistry() {
+        const container = document.getElementById('registry-container');
+        container.innerHTML = invoices.length ? '' : '<div class="card p-20 text-center text-slate-400 italic">No invoices recorded</div>';
+        invoices.slice().reverse().forEach(inv => {
+            container.innerHTML += `<div class="card p-4 flex justify-between items-center hover:bg-slate-50 transition cursor-pointer">
+                <div>
+                    <h4 class="font-bold text-slate-800">${inv.id}</h4>
+                    <p class="text-xs text-slate-500">${inv.customer} | ${inv.date}</p>
+                </div>
+                <div class="text-blue-600 font-bold">${inv.total} OMR</div>
+            </div>`;
+        });
+    }
+
+    function updateDashboard() {
+        let revenue = 0;
+        invoices.forEach(inv => revenue += parseFloat(inv.total));
+        document.getElementById('total-revenue-display').innerText = revenue.toFixed(3) + " OMR";
+        
+        const log = document.getElementById('activity-log');
+        if(invoices.length > 0) {
+            const last = invoices[invoices.length -1];
+            log.innerHTML = `<div class="text-slate-800 font-bold">Last Sale: ${last.total} OMR</div><div class="text-xs">${last.customer}</div>`;
+            log.className = "py-10 text-center";
+        }
+    }
+
+    function saveData() {
+        localStorage.setItem('sigma_inv', JSON.stringify(inventory));
+        localStorage.setItem('sigma_bills', JSON.stringify(invoices));
+    }
+
+    function resetData() {
+        if(confirm("Are you sure? This will delete all data!")) {
+            localStorage.clear();
+            location.reload();
+        }
+    }
+
+    // Initial Load
+    updateDashboard();
+</script>
+
+</body>
 </html>
