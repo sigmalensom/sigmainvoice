@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigma Studio Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .sidebar { background-color: #0f172a; min-height: 100vh; transition: all 0.3s; }
+        .nav-item { color: #94a3b8; transition: 0.2s; cursor: pointer; }
+        .nav-item:hover, .nav-item.active { color: white; background-color: #2563eb; border-radius: 8px; }
+        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        .section { display: none; }
+        .section.active { display: block; }
+    </style>
+</head>
+<body>
+
+<div class="flex">
+    <div class="sidebar w-64 p-5 fixed h-full">
+        <div class="flex items-center space-x-3 mb-10 p-2 bg-blue-600 rounded-lg">
+            <i class="fas fa-camera text-white text-xl"></i>
+            <span class="text-white font-bold text-lg">SIGMA STUDIO</span>
+        </div>
+        
+        <nav class="space-y-2">
+            <div onclick="showSection('dashboard')" id="nav-dashboard" class="nav-item active p-3 flex items-center space-x-3">
+                <i class="fas fa-th-large w-5"></i> <span>Dashboard</span>
+            </div>
+            <div onclick="showSection('billing')" id="nav-billing" class="nav-item p-3 flex items-center space-x-3">
+                <i class="fas fa-shopping-cart w-5"></i> <span>Create Bill</span>
+            </div>
+            <div onclick="showSection('invoices')" id="nav-invoices" class="nav-item p-3 flex items-center space-x-3">
+                <i class="fas fa-file-invoice w-5"></i> <span>Invoices</span>
+            </div>
+            <div onclick="showSection('inventory')" id="nav-inventory" class="nav-item p-3 flex items-center space-x-3">
+                <i class="fas fa-box w-5"></i> <span>Inventory</span>
+            </div>
+        </nav>
+
+        <div class="absolute bottom-10 left-5 nav-item p-3 flex items-center space-x-3">
+            <i class="fas fa-cog"></i> <span>Settings</span>
+        </div>
+    </div>
+
+    <div class="ml-64 w-full p-8">
+        
+        <div id="dashboard" class="section active">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-bold text-slate-800">Dashboard</h1>
+                <button onclick="showSection('billing')" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">+ New Invoice</button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card p-6 min-h-[300px] flex flex-col items-center justify-center text-slate-400">
+                    <p class="font-semibold mb-2 text-slate-700 w-full text-left">Expense Overview</p>
+                    <i class="fas fa-chart-line text-4xl mb-2 opacity-20"></i>
+                    <p>No expenses recorded for this period</p>
+                </div>
+                
+                <div class="card p-6">
+                    <h3 class="font-bold text-slate-700 mb-4">Sales & Dues</h3>
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-slate-400 border-bottom">
+                                <th class="text-left pb-3">PERIOD</th>
+                                <th class="text-right pb-3">SALES</th>
+                                <th class="text-right pb-3">RECEIPTS</th>
+                                <th class="text-right pb-3 text-red-500">DUES</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-slate-700 font-bold">
+                            <tr><td class="py-3">Today</td><td class="text-right">0.000</td><td class="text-right text-green-500">0.000</td><td class="text-right text-red-500">0.000</td></tr>
+                            <tr><td class="py-3">This Week</td><td class="text-right">0.000</td><td class="text-right text-green-500">0.000</td><td class="text-right text-red-500">0.000</td></tr>
+                            <tr><td class="py-3">This Month</td><td class="text-right">0.000</td><td class="text-right text-green-500">0.000</td><td class="text-right text-red-500">0.000</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="billing" class="section">
+            <h1 class="text-3xl font-bold text-slate-800 mb-8">Billing Counter</h1>
+            <div class="grid grid-cols-3 gap-6">
+                <div class="col-span-2 space-y-6">
+                    <div class="card p-6">
+                        <h3 class="text-blue-600 font-bold mb-4 flex items-center"><i class="fas fa-user mr-2"></i> Customer Details</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" placeholder="Client Name" class="p-3 bg-slate-50 border rounded-lg outline-none">
+                            <input type="text" placeholder="+968 Phone" class="p-3 bg-slate-50 border rounded-lg outline-none">
+                        </div>
+                    </div>
+                    <div class="card p-6">
+                        <h3 class="text-blue-600 font-bold mb-4 flex items-center"><i class="fas fa-box mr-2"></i> Add Items to Bill</h3>
+                        <div class="flex space-x-4">
+                            <select class="flex-1 p-3 bg-slate-50 border rounded-lg"><option>-- Select Item --</option></select>
+                            <input type="number" value="1" class="w-20 p-3 bg-slate-50 border rounded-lg text-center">
+                            <button class="bg-slate-900 text-white px-8 rounded-lg">ADD</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card p-6 h-fit text-center border-t-8 border-slate-900">
+                    <h3 class="font-bold mb-10">INVOICE SUMMARY <i class="fas fa-shopping-cart ml-2"></i></h3>
+                    <div class="py-10 text-slate-300"><i class="fas fa-shopping-basket text-4xl mb-2"></i><p>Empty Cart</p></div>
+                    <div class="border-t pt-4 flex justify-between items-center mb-6">
+                        <span class="font-bold text-slate-500">GRAND TOTAL</span>
+                        <span class="text-2xl font-bold text-blue-600">0.000</span>
+                    </div>
+                    <button class="w-full bg-slate-400 text-white py-3 rounded-lg cursor-not-allowed">CONFIRM & GENERATE</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="invoices" class="section">
+            <h1 class="text-3xl font-bold text-slate-800 mb-8">Invoice Registry</h1>
+            <div class="card p-20 flex flex-col items-center justify-center text-slate-400">
+                <i class="fas fa-file-invoice text-5xl mb-4 opacity-20"></i>
+                <p>No invoices found in registry</p>
+            </div>
+        </div>
+
+        <div id="inventory" class="section">
+            <h1 class="text-3xl font-bold text-slate-800 mb-8">Inventory Management</h1>
+            <div class="grid grid-cols-4 gap-6">
+                <div class="col-span-3 card p-6 text-center text-slate-400 py-20">
+                    <p>No inventory found</p>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-blue-600 font-bold mb-4">+ Add Stock</h3>
+                    <input type="text" placeholder="Item Name" class="w-full p-2 mb-3 bg-slate-50 border rounded">
+                    <select class="w-full p-2 mb-3 bg-slate-50 border rounded"><option>Camera</option><option>Lens</option></select>
+                    <button class="w-full bg-blue-600 text-white py-2 rounded-lg">Add to Assets</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function showSection(sectionId) {
+        // Hide all sections
+        document.querySelectorAll('.section').forEach(section => {
+            section.classList.remove('active');
+        });
+        // Remove active class from nav
+        document.querySelectorAll('.nav-item').forEach(nav => {
+            nav.classList.remove('active');
+        });
+        
+        // Show selected section
+        document.getElementById(sectionId).classList.add('active');
+        document.getElementById('nav-' + sectionId).classList.add('active');
+    }
+</script>
+
+</body>
+</html>
