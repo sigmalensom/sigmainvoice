@@ -6,243 +6,331 @@
     <title>Sigma Studio Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
-        .sidebar { background-color: #0f172a; min-height: 100vh; }
-        .nav-item { color: #94a3b8; transition: 0.2s; cursor: pointer; }
-        .nav-item:hover, .nav-item.active { color: white; background-color: #2563eb; border-radius: 8px; }
-        .card { background: white; border-radius: 16px; box-shadow: 0 4px 20px -5px rgb(0 0 0 / 0.05); }
+        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; color: #1e293b; }
+        .sidebar { background-color: #0f172a; min-height: 100vh; width: 260px; }
+        .nav-item { color: #94a3b8; transition: 0.3s; cursor: pointer; border-radius: 12px; margin-bottom: 4px; }
+        .nav-item:hover, .nav-item.active { color: white; background-color: #2563eb; }
+        .card { background: white; border-radius: 24px; box-shadow: 0 4px 25px -5px rgba(0,0,0,0.04); border: 1px solid rgba(226, 232, 240, 0.8); }
         .section { display: none; }
-        .section.active { display: block; }
-        .stat-card { transition: transform 0.2s; cursor: pointer; }
-        .stat-card:hover { transform: translateY(-5px); }
+        .section.active { display: block; animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        input, select { background-color: #f1f5f9 !important; border: none !important; border-radius: 14px !important; padding: 12px 16px !important; outline: none !important; }
+        input:focus { ring: 2px solid #2563eb !important; }
+        .btn-primary { background-color: #2563eb; color: white; border-radius: 14px; padding: 12px 24px; font-weight: 600; transition: 0.2s; }
+        .btn-primary:hover { background-color: #1d4ed8; transform: translateY(-1px); shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
+        .btn-dark { background-color: #0f172a; color: white; border-radius: 14px; font-weight: 700; }
     </style>
 </head>
-<body>
+<body class="flex">
 
-<div class="flex">
-    <div class="sidebar w-64 p-5 fixed h-full shadow-2xl">
-        <div class="flex items-center space-x-3 mb-10 p-3 bg-blue-600 rounded-xl shadow-lg shadow-blue-500/30">
-            <i class="fas fa-camera text-white text-xl"></i>
-            <span class="text-white font-bold text-lg tracking-tight">SIGMA STUDIO</span>
+    <aside class="sidebar p-6 fixed h-full z-20">
+        <div class="flex items-center space-x-3 mb-10 p-3 bg-blue-600 rounded-2xl shadow-lg shadow-blue-500/20">
+            <div class="bg-white/20 p-2 rounded-xl text-white"><i class="fas fa-camera text-xl"></i></div>
+            <span class="text-white font-extrabold tracking-tight text-lg">SIGMA STUDIO</span>
         </div>
         
-        <nav class="space-y-2">
-            <div onclick="showSection('dashboard')" id="nav-dashboard" class="nav-item active p-3 flex items-center space-x-3">
-                <i class="fas fa-th-large w-5"></i> <span>Dashboard</span>
+        <nav class="space-y-1">
+            <div onclick="showSection('dashboard')" id="nav-dashboard" class="nav-item active p-4 flex items-center space-x-3">
+                <i class="fas fa-th-large text-lg"></i> <span class="font-semibold">Dashboard</span>
             </div>
-            <div onclick="showSection('billing')" id="nav-billing" class="nav-item p-3 flex items-center space-x-3">
-                <i class="fas fa-shopping-cart w-5"></i> <span>Create Bill</span>
+            <div onclick="showSection('billing')" id="nav-billing" class="nav-item p-4 flex items-center space-x-3">
+                <i class="fas fa-shopping-cart text-lg"></i> <span class="font-semibold">Create Bill</span>
             </div>
-            <div onclick="showSection('invoices')" id="nav-invoices" class="nav-item p-3 flex items-center space-x-3">
-                <i class="fas fa-file-invoice w-5"></i> <span>Invoices</span>
+            <div onclick="showSection('invoices')" id="nav-invoices" class="nav-item p-4 flex items-center space-x-3">
+                <i class="fas fa-file-invoice text-lg"></i> <span class="font-semibold">Invoices</span>
             </div>
-            <div onclick="showSection('inventory')" id="nav-inventory" class="nav-item p-3 flex items-center space-x-3">
-                <i class="fas fa-box w-5"></i> <span>Inventory</span>
+            <div onclick="showSection('inventory')" id="nav-inventory" class="nav-item p-4 flex items-center space-x-3">
+                <i class="fas fa-box text-lg"></i> <span class="font-semibold">Inventory</span>
             </div>
         </nav>
 
-        <div onclick="showSection('settings')" id="nav-settings" class="absolute bottom-10 left-5 nav-item p-3 flex items-center space-x-3 w-52">
-            <i class="fas fa-cog"></i> <span>Settings</span>
+        <div onclick="showSection('settings')" id="nav-settings" class="absolute bottom-10 left-6 right-6 nav-item p-4 flex items-center space-x-3 text-slate-500">
+            <i class="fas fa-cog"></i> <span class="font-semibold">Settings</span>
         </div>
-    </div>
+    </aside>
 
-    <div class="ml-64 w-full min-h-screen">
-        <header class="bg-white p-4 px-8 flex justify-between items-center sticky top-0 z-10 border-b border-slate-100">
+    <main class="ml-[260px] w-full p-8">
+        
+        <div class="flex justify-between items-center mb-10">
             <div class="relative w-96">
-                <i class="fas fa-search absolute left-3 top-3 text-slate-300"></i>
-                <input type="text" placeholder="Search..." class="w-full bg-slate-50 rounded-full py-2 pl-10 pr-4 outline-none border focus:border-blue-400 transition">
+                <i class="fas fa-search absolute left-4 top-4 text-slate-300"></i>
+                <input type="text" placeholder="Search..." class="w-full pl-12 bg-white !bg-white border border-slate-100 !border-solid shadow-sm">
             </div>
             <div class="flex items-center space-x-4">
-                <i class="far fa-bell text-slate-400 text-lg cursor-pointer hover:text-blue-600 transition"></i>
-                <div class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 cursor-pointer">
-                    <i class="fas fa-user"></i>
+                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-400 border border-slate-100 cursor-pointer hover:bg-slate-50">
+                    <i class="far fa-bell"></i>
+                </div>
+                <div class="w-10 h-10 bg-slate-200 rounded-full border-2 border-white shadow-sm overflow-hidden">
+                    <i class="fas fa-user-circle text-4xl text-slate-400"></i>
                 </div>
             </div>
-        </header>
+        </div>
 
-        <main class="p-8">
+        <div id="dashboard" class="section active">
+            <div class="flex justify-between items-center mb-8">
+                <h1 class="text-3xl font-black text-slate-800">Dashboard</h1>
+                <button onclick="showSection('billing')" class="btn-primary flex items-center"><i class="fas fa-plus mr-2"></i> New Invoice</button>
+            </div>
             
-            <div id="dashboard" class="section active">
-                <div class="flex justify-between items-center mb-8">
-                    <h1 class="text-2xl font-bold text-slate-800">Dashboard</h1>
-                    <button onclick="showSection('billing')" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition-all active:scale-95">+ New Invoice</button>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <div class="lg:col-span-2 card p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-slate-700 text-lg">Expense Overview</h3>
+                        <select class="!py-1 !px-3 text-xs font-bold text-slate-500 border border-slate-100"><option>THIS MONTH</option></select>
+                    </div>
+                    <div class="flex flex-col items-center justify-center py-20">
+                        <i class="fas fa-wave-square text-blue-100 text-6xl mb-4"></i>
+                        <p class="text-slate-400 font-medium">No expenses recorded for this period</p>
+                    </div>
                 </div>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-                    <div class="lg:col-span-2 card p-6 min-h-[350px] relative overflow-hidden">
-                        <div class="flex justify-between items-center mb-6">
-                            <h3 class="font-bold text-slate-800">Expense Overview</h3>
-                            <select class="text-xs text-slate-500 bg-slate-50 p-1 rounded outline-none border cursor-pointer"><option>THIS MONTH</option></select>
+                <div class="card p-8">
+                    <div class="flex items-center space-x-2 mb-8">
+                        <h3 class="font-bold text-slate-700 text-lg">Sales & Dues</h3>
+                        <i class="far fa-question-circle text-slate-300"></i>
+                    </div>
+                    <table class="w-full">
+                        <thead>
+                            <tr class="text-[11px] font-bold text-slate-400 tracking-wider uppercase border-b border-slate-50">
+                                <th class="text-left pb-4">Period</th>
+                                <th class="text-right pb-4">Sales</th>
+                                <th class="text-right pb-4">Receipts</th>
+                                <th class="text-right pb-4">Dues</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-50 font-bold text-sm">
+                            <tr><td class="py-4 text-slate-500 font-medium">Today</td><td class="text-right text-slate-800" id="dash-today-sales">0.000</td><td class="text-right text-emerald-500" id="dash-today-receipts">0.000</td><td class="text-right text-rose-500">0.000</td></tr>
+                            <tr><td class="py-4 text-slate-500 font-medium">This Week</td><td class="text-right text-slate-800" id="dash-week-sales">0.000</td><td class="text-right text-emerald-500">0.000</td><td class="text-right text-rose-500">0.000</td></tr>
+                            <tr><td class="py-4 text-slate-500 font-medium">This Month</td><td class="text-right text-slate-800" id="dash-month-sales">0.000</td><td class="text-right text-emerald-500">0.000</td><td class="text-right text-rose-500">0.000</td></tr>
+                            <tr><td class="py-4 text-slate-500 font-medium">This Quarter</td><td class="text-right text-slate-800">0.000</td><td class="text-right text-emerald-500">0.000</td><td class="text-right text-rose-500">0.000</td></tr>
+                            <tr><td class="py-4 text-slate-500 font-medium">This Year</td><td class="text-right text-slate-800">0.000</td><td class="text-right text-emerald-500">0.000</td><td class="text-right text-rose-500">0.000</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="mt-8 pt-6 border-t border-slate-50 text-center">
+                        <button class="text-blue-600 text-xs font-extrabold hover:underline">VIEW DETAILED HISTORY <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-4 gap-6">
+                <div class="card p-6 flex items-center justify-between hover:scale-[1.02] transition cursor-pointer">
+                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-chart-line"></i></div>
+                    <div class="text-right"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Analytics</p></div>
+                </div>
+                <div class="card p-6 flex items-center justify-between hover:scale-[1.02] transition cursor-pointer">
+                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-poll"></i></div>
+                    <div class="text-right"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Reports</p></div>
+                </div>
+                <div class="card p-6 flex items-center justify-between hover:scale-[1.02] transition cursor-pointer" onclick="showSection('invoices')">
+                    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-file-invoice-dollar"></i></div>
+                    <div class="text-right"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Invoices</p></div>
+                </div>
+                <div class="card p-6 flex items-center justify-between hover:scale-[1.02] transition cursor-pointer" onclick="showSection('inventory')">
+                    <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="text-right"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Low Stock</p></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="billing" class="section">
+            <h1 class="text-3xl font-black text-slate-800 mb-8">Billing Counter</h1>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-8">
+                    <div class="card p-8">
+                        <div class="flex items-center space-x-3 mb-8">
+                            <i class="far fa-user text-blue-600 text-xl"></i>
+                            <h3 class="font-bold text-slate-700 text-lg">Customer Details</h3>
                         </div>
-                        <div class="flex flex-col items-center justify-center h-64 text-center">
-                            <i class="fas fa-wave-square text-blue-100 text-6xl mb-4"></i>
-                            <p class="text-slate-400 text-sm">No expenses recorded for this period</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <input id="bill-cust-name" type="text" placeholder="Client Name" class="w-full">
+                            <div class="grid grid-cols-3 gap-4">
+                                <input type="text" value="+968" class="col-span-1 text-center font-bold" disabled>
+                                <input id="bill-cust-phone" type="text" placeholder="Phone" class="col-span-2">
+                            </div>
+                            <input id="bill-cust-addr" type="text" placeholder="Address / Location" class="w-full md:col-span-2">
                         </div>
+                    </div>
+                    <div class="card p-8">
+                        <div class="flex items-center space-x-3 mb-8">
+                            <i class="fas fa-plus-circle text-blue-600 text-xl"></i>
+                            <h3 class="font-bold text-slate-700 text-lg">Add Items to Bill</h3>
+                        </div>
+                        <div class="flex space-x-4">
+                            <select id="bill-item-select" class="flex-1 font-semibold text-slate-700">
+                                <option value="">-- Select an Item --</option>
+                            </select>
+                            <div class="flex flex-col items-center">
+                                <span class="text-[10px] font-bold text-slate-400 mb-1">QTY</span>
+                                <input id="bill-qty" type="number" value="1" min="1" class="w-20 text-center font-bold">
+                            </div>
+                            <button onclick="addItemToCart()" class="btn-dark px-10 self-end h-[50px]">ADD</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card p-8 flex flex-col h-fit shadow-xl border-t-8 border-slate-900 sticky top-10">
+                    <div class="flex justify-between items-center mb-10">
+                        <h3 class="font-black text-slate-800 tracking-tighter text-lg">INVOICE SUMMARY</h3>
+                        <i class="fas fa-shopping-cart text-slate-200"></i>
                     </div>
                     
-                    <div class="card p-6 min-h-[350px]">
-                        <div class="flex items-center space-x-2 mb-6">
-                            <h3 class="font-bold text-slate-800">Sales & Dues</h3>
-                            <i class="far fa-question-circle text-slate-300 text-sm"></i>
+                    <div id="cart-items" class="space-y-4 mb-12 min-h-[120px]">
+                        <div class="text-center py-10 flex flex-col items-center">
+                            <i class="fas fa-shopping-basket text-slate-100 text-5xl mb-3"></i>
+                            <p class="text-slate-300 text-xs font-bold uppercase tracking-widest">Empty Cart</p>
                         </div>
-                        <table class="w-full text-xs">
-                            <thead>
-                                <tr class="text-slate-400 border-b">
-                                    <th class="text-left font-medium py-2">PERIOD</th>
-                                    <th class="text-right font-medium py-2">SALES</th>
-                                    <th class="text-right font-medium py-2">RECEIPTS</th>
-                                    <th class="text-right font-medium py-2">DUES</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-slate-700 font-bold divide-y divide-slate-50" id="dash-sales-table">
-                                <tr>
-                                    <td class="py-4 text-slate-500 font-normal">Today</td>
-                                    <td class="text-right text-slate-800" id="sale-today">0.000</td>
-                                    <td class="text-right text-emerald-500" id="receipt-today">0.000</td>
-                                    <td class="text-right text-rose-500" id="due-today">0.000</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-4 text-slate-500 font-normal">This Week</td>
-                                    <td class="text-right text-slate-800" id="sale-week">0.000</td>
-                                    <td class="text-right text-emerald-500">0.000</td>
-                                    <td class="text-right text-rose-500">0.000</td>
-                                </tr>
-                                <tr>
-                                    <td class="py-4 text-slate-500 font-normal">This Month</td>
-                                    <td class="text-right text-slate-800" id="sale-month">0.000</td>
-                                    <td class="text-right text-emerald-500">0.000</td>
-                                    <td class="text-right text-rose-500">0.000</td>
-                                </tr>
+                    </div>
+
+                    <div class="border-t border-dashed border-slate-200 pt-6 flex justify-between items-center mb-8">
+                        <span class="font-bold text-slate-400 text-sm">GRAND TOTAL</span>
+                        <span class="text-blue-600 text-3xl font-black"><span class="text-sm mr-1">OMR</span><span id="cart-grand-total">0.000</span></span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mb-6">
+                        <select class="!py-2 !text-[11px] font-bold"><option>MARK PAID</option><option>DUE</option></select>
+                        <select class="!py-2 !text-[11px] font-bold"><option>CASH</option><option>ONLINE</option></select>
+                    </div>
+
+                    <button id="btn-generate" onclick="finalizeInvoice()" class="w-full bg-slate-200 text-slate-400 py-4 rounded-2xl font-black text-sm tracking-widest cursor-not-allowed transition-all" disabled>CONFIRM & GENERATE</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="inventory" class="section">
+            <h1 class="text-3xl font-black text-slate-800 mb-8">Inventory Management</h1>
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                <div class="lg:col-span-3 card p-8">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr class="text-slate-400 font-bold text-[11px] uppercase tracking-widest border-b">
+                                <th class="text-left pb-4">Item</th>
+                                <th class="text-left pb-4">Category</th>
+                                <th class="text-left pb-4">Stock</th>
+                                <th class="text-left pb-4">Price</th>
+                                <th class="text-right pb-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table-body" class="divide-y divide-slate-50">
                             </tbody>
-                        </table>
-                        <div class="mt-6 pt-4 border-t text-center">
-                            <button class="text-blue-600 text-xs font-bold hover:underline">VIEW DETAILED HISTORY <i class="fas fa-arrow-right ml-1"></i></button>
-                        </div>
-                    </div>
+                    </table>
                 </div>
-
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="card p-5 stat-card flex items-center justify-between">
-                        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600"><i class="fas fa-chart-line"></i></div>
-                        <div class="text-right"><p class="text-slate-400 text-[10px] font-bold">ANALYTICS</p></div>
-                    </div>
-                    <div class="card p-5 stat-card flex items-center justify-between">
-                        <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600"><i class="fas fa-poll"></i></div>
-                        <div class="text-right"><p class="text-slate-400 text-[10px] font-bold">REPORTS</p></div>
-                    </div>
-                    <div class="card p-5 stat-card flex items-center justify-between">
-                        <div class="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center text-amber-600"><i class="fas fa-file-alt"></i></div>
-                        <div class="text-right"><p class="text-slate-400 text-[10px] font-bold">INVOICES</p></div>
-                    </div>
-                    <div class="card p-5 stat-card flex items-center justify-between">
-                        <div class="w-10 h-10 bg-rose-50 rounded-lg flex items-center justify-center text-rose-600"><i class="fas fa-exclamation-triangle"></i></div>
-                        <div class="text-right"><p class="text-slate-400 text-[10px] font-bold">LOW STOCK</p></div>
+                <div class="card p-8 h-fit bg-slate-50 border-none">
+                    <h3 class="font-bold text-blue-600 mb-6 flex items-center"><i class="fas fa-plus mr-2"></i> Add Stock</h3>
+                    <div class="space-y-4">
+                        <input id="inv-name" type="text" placeholder="Item Name" class="w-full !bg-white border-slate-100 border !border-solid shadow-sm">
+                        <select id="inv-cat" class="w-full !bg-white border-slate-100 border !border-solid shadow-sm font-semibold">
+                            <option>Camera</option><option>Lenses</option><option>Studio Services</option><option>Printing</option>
+                        </select>
+                        <input id="inv-price" type="number" step="0.001" placeholder="Price (OMR)" class="w-full !bg-white border-slate-100 border !border-solid shadow-sm">
+                        <input id="inv-stock" type="number" placeholder="Initial Stock" class="w-full !bg-white border-slate-100 border !border-solid shadow-sm">
+                        <button onclick="addItemToInventory()" class="btn-primary w-full shadow-lg shadow-blue-500/30 mt-4">Add to Assets</button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div id="billing" class="section">
-                <h1 class="text-2xl font-bold text-slate-800 mb-8">Billing Counter</h1>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-2 space-y-6">
-                        <div class="card p-6">
-                            <h3 class="text-blue-600 font-bold mb-6 flex items-center"><i class="far fa-user-circle mr-2"></i> Customer Details</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <input id="cust-name" type="text" placeholder="Client Name" class="p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-blue-400 transition">
-                                <input id="cust-phone" type="text" placeholder="+968 Phone" class="p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-blue-400 transition">
-                                <input id="cust-address" type="text" placeholder="Address / Location" class="p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-blue-400 transition md:col-span-2">
-                            </div>
-                        </div>
-                        <div class="card p-6">
-                            <h3 class="text-blue-600 font-bold mb-6 flex items-center"><i class="fas fa-plus-circle mr-2"></i> Add Items to Bill</h3>
-                            <div class="flex flex-wrap gap-4">
-                                <select id="bill-item-select" class="flex-1 min-w-[200px] p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-blue-400 appearance-none"></select>
-                                <div class="flex items-center bg-slate-50 border border-slate-100 rounded-xl px-2">
-                                    <span class="text-[10px] text-slate-400 mr-2 font-bold uppercase">Qty</span>
-                                    <input id="bill-qty" type="number" value="1" min="1" class="w-12 bg-transparent py-3 outline-none text-center font-bold">
-                                </div>
-                                <button onclick="addToBill()" class="bg-[#0f172a] text-white px-10 py-3 rounded-xl font-bold hover:bg-black transition active:scale-95">ADD</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card p-6 h-fit border-t-8 border-slate-900 sticky top-24 shadow-xl">
-                        <div class="flex justify-between items-center mb-10">
-                            <h3 class="font-black text-slate-800 tracking-tighter">INVOICE SUMMARY</h3>
-                            <i class="fas fa-shopping-cart text-slate-300"></i>
-                        </div>
-                        <div id="bill-summary-list" class="space-y-4 mb-10 min-h-[150px]">
-                            <div class="text-center py-10">
-                                <i class="fas fa-shopping-basket text-slate-100 text-5xl mb-2"></i>
-                                <p class="text-slate-300 text-xs font-bold uppercase tracking-widest">Empty Cart</p>
-                            </div>
-                        </div>
-                        <div class="border-t border-dashed pt-6 flex justify-between items-center mb-8">
-                            <span class="font-bold text-slate-400 text-sm">GRAND TOTAL</span>
-                            <span class="text-blue-600 text-3xl font-black"><span class="text-sm mr-1">OMR</span><span id="grand-total-display">0.000</span></span>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2 mb-4">
-                            <select class="p-2 text-[10px] bg-slate-50 border rounded-lg font-bold"><option>MARK PAID</option><option>DUE</option></select>
-                            <select class="p-2 text-[10px] bg-slate-50 border rounded-lg font-bold"><option>CASH</option><option>CARD</option></select>
-                        </div>
-                        <button id="btn-generate" onclick="generateFinalInvoice()" class="w-full bg-slate-200 text-slate-400 py-4 rounded-2xl font-black text-sm tracking-widest transition-all cursor-not-allowed" disabled>CONFIRM & GENERATE</button>
-                    </div>
+        <div id="invoices" class="section">
+            <h1 class="text-3xl font-black text-slate-800 mb-8">Invoice Registry</h1>
+            <div id="registry-container" class="grid gap-4">
+                <div class="card p-20 flex flex-col items-center text-slate-300">
+                    <i class="far fa-file-alt text-6xl mb-4 opacity-20"></i>
+                    <p class="font-bold">No invoices found in registry</p>
                 </div>
             </div>
+        </div>
 
-            <div id="invoices" class="section">
-                <h1 class="text-2xl font-bold text-slate-800 mb-8">Invoice Registry</h1>
-                <div id="registry-container" class="grid gap-4">
-                    <div class="card p-20 flex flex-col items-center justify-center text-slate-400">
-                        <i class="far fa-file-alt text-5xl mb-4 opacity-20"></i>
-                        <p>No invoices found in registry</p>
-                    </div>
-                </div>
-            </div>
+    </main>
 
-            <div id="inventory" class="section">
-                <div class="flex justify-between items-center mb-8">
-                    <h1 class="text-2xl font-bold text-slate-800">Inventory Management</h1>
-                </div>
-                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                    <div class="lg:col-span-3 card p-6 overflow-x-auto">
-                        <table class="w-full text-sm text-left">
-                            <thead>
-                                <tr class="text-slate-400 border-b">
-                                    <th class="pb-4 font-medium uppercase text-[10px] tracking-wider">Item Name</th>
-                                    <th class="pb-4 font-medium uppercase text-[10px] tracking-wider">Price (OMR)</th>
-                                    <th class="pb-4 font-medium uppercase text-[10px] tracking-wider">Stock</th>
-                                    <th class="pb-4 font-medium uppercase text-[10px] tracking-wider text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="inventory-list-body" class="divide-y divide-slate-50"></tbody>
-                        </table>
-                    </div>
-                    <div class="card p-6 h-fit bg-slate-50 border-none">
-                        <h3 class="text-blue-600 font-bold mb-6 flex items-center"><i class="fas fa-plus mr-2"></i> Add Stock</h3>
-                        <div class="space-y-4">
-                            <input id="inv-name" type="text" placeholder="Item Name" class="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-400">
-                            <input id="inv-price" type="number" placeholder="Price (0.000)" class="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-400">
-                            <input id="inv-stock" type="number" placeholder="Qty" class="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-400">
-                            <button onclick="addNewItemToInventory()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-blue-600/30 transition active:scale-95">Add to Assets</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <script>
+        let inventory = JSON.parse(localStorage.getItem('sigma_inventory')) || [];
+        let invoices = JSON.parse(localStorage.getItem('sigma_invoices')) || [];
+        let cart = [];
 
-        </main>
-    </div>
-</div>
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('nav-'+id).classList.add('active');
+            if(id === 'inventory') renderInventory();
+            if(id === 'billing') populateBillingDropdown();
+            if(id === 'invoices') renderInvoices();
+            if(id === 'dashboard') updateDashboard();
+        }
 
-<script>
-    // System Data
-    let inventory = JSON.parse(localStorage.getItem('sigma_inv_v2')) || [
-        { name: 'Passport Photo (8 Pcs)', price: '2.000', stock: 999 },
-        { name: 'Full Frame Portrait', price: '15.000', stock: 50 }
-    ];
-    let invoices = JSON.parse(localStorage.getItem('sigma_bills_v2')) || [];
-    let currentCart = [];
+        // --- Inventory Logic ---
+        function addItemToInventory() {
+            const name = document.getElementById('inv-name').value;
+            const cat = document.getElementById('inv-cat').value;
+            const price = parseFloat(document.getElementById('inv-price').value || 0).toFixed(3);
+            const stock = parseInt(document.getElementById('inv-stock').value || 0);
 
-    function showSection(sectionId) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav
+            if(!name || price <= 0) return alert("Please enter valid details");
+
+            inventory.push({ name, cat, price, stock });
+            localStorage.setItem('sigma_inventory', JSON.stringify(inventory));
+            
+            // Clear inputs
+            document.getElementById('inv-name').value = '';
+            document.getElementById('inv-price').value = '';
+            document.getElementById('inv-stock').value = '';
+            renderInventory();
+        }
+
+        function renderInventory() {
+            const tbody = document.getElementById('inventory-table-body');
+            tbody.innerHTML = inventory.length ? '' : '<tr><td colspan="5" class="text-center py-10 text-slate-400 font-medium">No items found</td></tr>';
+            inventory.forEach((item, index) => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 transition font-semibold text-slate-600">
+                        <td class="py-5">${item.name}</td>
+                        <td class="text-xs font-bold text-slate-400 uppercase tracking-tighter">${item.cat}</td>
+                        <td><span class="px-3 py-1 rounded-lg ${item.stock < 5 ? 'bg-rose-50 text-rose-500' : 'bg-slate-100 text-slate-500'}">${item.stock}</span></td>
+                        <td class="font-bold text-slate-800">${item.price}</td>
+                        <td class="text-right"><button onclick="deleteInv(${index})" class="text-slate-200 hover:text-rose-500 transition"><i class="fas fa-trash"></i></button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function deleteInv(index) {
+            inventory.splice(index, 1);
+            localStorage.setItem('sigma_inventory', JSON.stringify(inventory));
+            renderInventory();
+        }
+
+        // --- Billing Logic ---
+        function populateBillingDropdown() {
+            const select = document.getElementById('bill-item-select');
+            select.innerHTML = '<option value="">-- Select an Item --</option>';
+            inventory.forEach((item, index) => {
+                select.innerHTML += `<option value="${index}">${item.name} (${item.price} OMR)</option>`;
+            });
+        }
+
+        function addItemToCart() {
+            const idx = document.getElementById('bill-item-select').value;
+            const qty = parseInt(document.getElementById('bill-qty').value);
+            if(idx === "") return;
+
+            const item = inventory[idx];
+            const total = (item.price * qty).toFixed(3);
+            cart.push({ name: item.name, price: item.price, qty, total });
+            renderCart();
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const btn = document.getElementById('btn-generate');
+            container.innerHTML = '';
+            let grandTotal = 0;
+
+            if(!cart.length) {
+                container.innerHTML = `<div class="text-center py-10 flex flex-col items-center">
+                    <i class="fas fa-shopping-basket text-slate-100 text-5xl mb-3"></i>
+                    <p class="text-slate-300 text-xs font-bold uppercase tracking-widest">Empty Cart</p>
+                </div>`;
+                document.getElementById('cart-grand-total').innerText = "0.000";
+                btn.disabled = true;
+                btn.className = "w-full bg-slate-200 text-slate-
