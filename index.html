@@ -5,236 +5,180 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sigma Studio Manager</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; color: #1e293b; }
-        .sidebar { background-color: #0f172a; min-height: 100vh; width: 260px; }
-        .nav-item { color: #94a3b8; transition: 0.3s; cursor: pointer; border-radius: 12px; margin-bottom: 4px; }
-        .nav-item:hover, .nav-item.active { color: white; background-color: #2563eb; }
-        .card { background: white; border-radius: 24px; box-shadow: 0 4px 25px -5px rgba(0,0,0,0.04); border: 1px solid rgba(226, 232, 240, 0.8); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .sidebar { background-color: #0f172a; min-height: 100vh; transition: 0.3s; }
+        .nav-link { color: #94a3b8; border-radius: 12px; transition: 0.2s; cursor: pointer; }
+        .nav-link:hover, .nav-link.active { background-color: #2563eb; color: white; }
+        .card { background: white; border-radius: 24px; box-shadow: 0 4px 20px -5px rgba(0,0,0,0.05); }
         .section { display: none; }
-        .section.active { display: block; animation: fadeIn 0.4s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        input, select { background-color: #f1f5f9 !important; border: none !important; border-radius: 14px !important; padding: 12px 16px !important; outline: none !important; }
-        input:focus { ring: 2px solid #2563eb !important; }
-        .btn-primary { background-color: #2563eb; color: white; border-radius: 14px; padding: 12px 24px; font-weight: 600; transition: 0.2s; }
-        .btn-primary:hover { background-color: #1d4ed8; transform: translateY(-1px); shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3); }
-        .btn-dark { background-color: #0f172a; color: white; border-radius: 14px; font-weight: 700; }
+        .section.active { display: block; animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        
+        input, select { background-color: #f1f5f9 !important; border: none !important; border-radius: 12px !important; padding: 12px !important; outline: none !important; }
+        .invoice-card { background: #0f172a; border-radius: 24px; color: white; }
+        .btn-confirm { background: #64748b; color: white; border-radius: 16px; padding: 14px; font-weight: 700; width: 100%; transition: 0.3s; }
+        .btn-confirm.ready { background: #2563eb; cursor: pointer; }
     </style>
 </head>
 <body class="flex">
 
-    <aside class="sidebar p-6 fixed h-full z-20">
-        <div class="flex items-center space-x-3 mb-10 p-3 bg-blue-600 rounded-2xl shadow-lg shadow-blue-500/20">
-            <div class="bg-white/20 p-2 rounded-xl text-white"><i class="fas fa-camera text-xl"></i></div>
-            <span class="text-white font-extrabold tracking-tight text-lg">SIGMA STUDIO</span>
+    <aside class="sidebar w-64 p-6 fixed h-full shadow-2xl">
+        <div class="flex items-center gap-3 mb-10 px-2">
+            <div class="bg-blue-600 p-2 rounded-xl"><i class="fas fa-camera text-white"></i></div>
+            <h1 class="text-white font-extrabold tracking-tight">SIGMA STUDIO</h1>
         </div>
         
-        <nav class="space-y-1">
-            <div onclick="showSection('dashboard')" id="nav-dashboard" class="nav-item active p-4 flex items-center space-x-3">
-                <i class="fas fa-th-large text-lg"></i> <span class="font-semibold">Dashboard</span>
+        <nav class="space-y-2">
+            <div onclick="showTab('dashboard')" id="tab-dashboard" class="nav-link active p-4 flex items-center gap-3">
+                <i class="fas fa-th-large"></i> <span class="font-bold">Dashboard</span>
             </div>
-            <div onclick="showSection('billing')" id="nav-billing" class="nav-item p-4 flex items-center space-x-3">
-                <i class="fas fa-shopping-cart text-lg"></i> <span class="font-semibold">Create Bill</span>
+            <div onclick="showTab('billing')" id="tab-billing" class="nav-link p-4 flex items-center gap-3">
+                <i class="fas fa-shopping-cart"></i> <span class="font-bold">Create Bill</span>
             </div>
-            <div onclick="showSection('invoices')" id="nav-invoices" class="nav-item p-4 flex items-center space-x-3">
-                <i class="fas fa-file-invoice text-lg"></i> <span class="font-semibold">Invoices</span>
+            <div onclick="showTab('invoices')" id="tab-invoices" class="nav-link p-4 flex items-center gap-3">
+                <i class="fas fa-file-invoice"></i> <span class="font-bold">Invoices</span>
             </div>
-            <div onclick="showSection('inventory')" id="nav-inventory" class="nav-item p-4 flex items-center space-x-3">
-                <i class="fas fa-box text-lg"></i> <span class="font-semibold">Inventory</span>
+            <div onclick="showTab('inventory')" id="tab-inventory" class="nav-link p-4 flex items-center gap-3">
+                <i class="fas fa-box"></i> <span class="font-bold">Inventory</span>
             </div>
         </nav>
 
-        <div onclick="showSection('settings')" id="nav-settings" class="absolute bottom-10 left-6 right-6 nav-item p-4 flex items-center space-x-3 text-slate-500">
-            <i class="fas fa-cog"></i> <span class="font-semibold">Settings</span>
+        <div class="absolute bottom-10 left-6 right-6 pt-6 border-t border-slate-800">
+            <div class="nav-link p-4 flex items-center gap-3"><i class="fas fa-cog"></i> <span class="font-bold">Settings</span></div>
         </div>
     </aside>
 
-    <main class="ml-[260px] w-full p-8">
+    <main class="ml-64 w-full p-10">
         
-        <div class="flex justify-between items-center mb-10">
+        <header class="flex justify-between items-center mb-10">
             <div class="relative w-96">
                 <i class="fas fa-search absolute left-4 top-4 text-slate-300"></i>
-                <input type="text" placeholder="Search..." class="w-full pl-12 bg-white !bg-white border border-slate-100 !border-solid shadow-sm">
+                <input type="text" placeholder="Search..." class="w-full pl-12 bg-white !bg-white border border-slate-100 !border-solid">
             </div>
-            <div class="flex items-center space-x-4">
-                <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-slate-400 border border-slate-100 cursor-pointer hover:bg-slate-50">
-                    <i class="far fa-bell"></i>
-                </div>
-                <div class="w-10 h-10 bg-slate-200 rounded-full border-2 border-white shadow-sm overflow-hidden">
-                    <i class="fas fa-user-circle text-4xl text-slate-400"></i>
-                </div>
-            </div>
-        </div>
+            <div class="w-10 h-10 bg-slate-200 rounded-full flex items-center justify-center"><i class="fas fa-user text-slate-400"></i></div>
+        </header>
 
         <div id="dashboard" class="section active">
             <div class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl font-black text-slate-800">Dashboard</h1>
-                <button onclick="showSection('billing')" class="btn-primary flex items-center"><i class="fas fa-plus mr-2"></i> New Invoice</button>
-            </div>
-            
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-                <div class="lg:col-span-2 card p-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="font-bold text-slate-700 text-lg">Expense Overview</h3>
-                        <select class="!py-1 !px-3 text-xs font-bold text-slate-500 border border-slate-100"><option>THIS MONTH</option></select>
-                    </div>
-                    <div class="flex flex-col items-center justify-center py-20">
-                        <i class="fas fa-wave-square text-blue-100 text-6xl mb-4"></i>
-                        <p class="text-slate-400 font-medium">No expenses recorded for this period</p>
-                    </div>
-                </div>
-                
-                <div class="card p-8">
-                    <div class="flex items-center space-x-2 mb-8">
-                        <h3 class="font-bold text-slate-700 text-lg">Sales & Dues</h3>
-                        <i class="far fa-question-circle text-slate-300"></i>
-                    </div>
-                    <table class="w-full">
-                        <thead>
-                            <tr class="text-[11px] font-bold text-slate-400 tracking-wider uppercase border-b border-slate-50">
-                                <th class="text-left pb-4">Period</th>
-                                <th class="text-right pb-4">Sales</th>
-                                <th class="text-right pb-4">Receipts</th>
-                                <th class="text-right pb-4">Dues</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-50 font-bold text-sm">
-                            <tr><td class="py-4 text-slate-500 font-medium">Today</td><td class="text-right text-slate-800" id="dash-today-sales">0.000</td><td class="text-right text-emerald-500" id="dash-today-receipts">0.000</td><td class="text-right text-rose-500">0.000</td></tr>
-                            <tr><td class="py-4 text-slate-500 font-medium">This Week</td><td class="text-right text-slate-800" id="dash-week-sales">0.000</td><td class="text-right text-emerald-500">0.000</td><td class="text-right text-rose-500">0.000</td></tr>
-                            <tr><td class="py-4 text-slate-500 font-medium">This Month</td><td class="text-right text-slate-800" id="dash-month-sales">0.000</td><td class="text-right text-emerald-500">0.000</td><td class="text-right text-rose-500">0.000</td></tr>
-                            <tr><td class="py-4 text-slate-500 font-medium">This Quarter</td><td class="text-right text-slate-800">0.000</td><td class="text-right text-emerald-500">0.000</td><td class="text-right text-rose-500">0.000</td></tr>
-                            <tr><td class="py-4 text-slate-500 font-medium">This Year</td><td class="text-right text-slate-800">0.000</td><td class="text-right text-emerald-500">0.000</td><td class="text-right text-rose-500">0.000</td></tr>
-                        </tbody>
-                    </table>
-                    <div class="mt-8 pt-6 border-t border-slate-50 text-center">
-                        <button class="text-blue-600 text-xs font-extrabold hover:underline">VIEW DETAILED HISTORY <i class="fas fa-arrow-right ml-1"></i></button>
-                    </div>
-                </div>
+                <h2 class="text-3xl font-black text-slate-800 tracking-tight">Dashboard</h2>
+                <button onclick="showTab('billing')" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold hover:bg-blue-700 transition flex items-center gap-2">
+                    <i class="fas fa-plus"></i> New Invoice
+                </button>
             </div>
 
-            <div class="grid grid-cols-4 gap-6">
-                <div class="card p-6 flex items-center justify-between hover:scale-[1.02] transition cursor-pointer">
-                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-chart-line"></i></div>
-                    <div class="text-right"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Analytics</p></div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 card p-8 min-h-[400px] flex flex-col items-center justify-center text-center">
+                    <div class="w-full flex justify-between items-start mb-auto">
+                        <h3 class="font-bold text-slate-700">Expense Overview</h3>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">THIS MONTH <i class="fas fa-chevron-down ml-1"></i></span>
+                    </div>
+                    <i class="fas fa-wave-square text-slate-100 text-6xl mb-4"></i>
+                    <p class="text-slate-400 font-medium">No expenses recorded for this period</p>
                 </div>
-                <div class="card p-6 flex items-center justify-between hover:scale-[1.02] transition cursor-pointer">
-                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-poll"></i></div>
-                    <div class="text-right"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Reports</p></div>
-                </div>
-                <div class="card p-6 flex items-center justify-between hover:scale-[1.02] transition cursor-pointer" onclick="showSection('invoices')">
-                    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-file-invoice-dollar"></i></div>
-                    <div class="text-right"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Invoices</p></div>
-                </div>
-                <div class="card p-6 flex items-center justify-between hover:scale-[1.02] transition cursor-pointer" onclick="showSection('inventory')">
-                    <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center text-xl"><i class="fas fa-exclamation-triangle"></i></div>
-                    <div class="text-right"><p class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Low Stock</p></div>
+
+                <div class="card p-8">
+                    <div class="flex items-center gap-2 mb-8">
+                        <h3 class="font-bold text-slate-700">Sales & Dues</h3>
+                        <i class="far fa-question-circle text-slate-300 cursor-help"></i>
+                    </div>
+                    <table class="w-full text-sm">
+                        <tr class="text-[10px] text-slate-400 font-bold uppercase tracking-widest border-b border-slate-50">
+                            <td class="pb-4">Period</td>
+                            <td class="pb-4 text-right">Sales</td>
+                            <td class="pb-4 text-right">Receipts</td>
+                            <td class="pb-4 text-right">Dues</td>
+                        </tr>
+                        <tr class="font-bold text-slate-700">
+                            <td class="py-5 text-slate-400 font-medium">Today</td>
+                            <td class="text-right" id="dash-today-sales">0.000</td>
+                            <td class="text-right text-emerald-500">0.000</td>
+                            <td class="text-right text-rose-500">0.000</td>
+                        </tr>
+                        <tr class="font-bold text-slate-700">
+                            <td class="py-5 text-slate-400 font-medium">This Week</td>
+                            <td class="text-right" id="dash-week-sales">0.000</td>
+                            <td class="text-right text-emerald-500">0.000</td>
+                            <td class="text-right text-rose-500">0.000</td>
+                        </tr>
+                        <tr class="font-bold text-slate-700 border-t border-slate-50">
+                            <td class="py-5 text-slate-400 font-medium">This Month</td>
+                            <td class="text-right" id="dash-month-sales">0.000</td>
+                            <td class="text-right text-emerald-500">0.000</td>
+                            <td class="text-right text-rose-500">0.000</td>
+                        </tr>
+                    </table>
+                    <div class="mt-8 pt-6 border-t border-slate-50 text-center">
+                        <button class="text-blue-600 font-extrabold text-xs tracking-widest hover:underline">VIEW DETAILED HISTORY <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div id="billing" class="section">
-            <h1 class="text-3xl font-black text-slate-800 mb-8">Billing Counter</h1>
+            <h2 class="text-3xl font-black text-slate-800 mb-8 tracking-tight">Billing Counter</h2>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-2 space-y-8">
                     <div class="card p-8">
-                        <div class="flex items-center space-x-3 mb-8">
-                            <i class="far fa-user text-blue-600 text-xl"></i>
-                            <h3 class="font-bold text-slate-700 text-lg">Customer Details</h3>
-                        </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <input id="bill-cust-name" type="text" placeholder="Client Name" class="w-full">
-                            <div class="grid grid-cols-3 gap-4">
-                                <input type="text" value="+968" class="col-span-1 text-center font-bold" disabled>
-                                <input id="bill-cust-phone" type="text" placeholder="Phone" class="col-span-2">
-                            </div>
-                            <input id="bill-cust-addr" type="text" placeholder="Address / Location" class="w-full md:col-span-2">
+                        <h3 class="font-bold text-slate-700 mb-6 flex items-center gap-2"><i class="far fa-user text-blue-600"></i> Customer Details</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <input id="cust-name" type="text" placeholder="Client Name" class="col-span-2">
+                            <input id="cust-phone" type="text" placeholder="+968 Phone Number">
+                            <input id="cust-addr" type="text" placeholder="Address / Location">
                         </div>
                     </div>
                     <div class="card p-8">
-                        <div class="flex items-center space-x-3 mb-8">
-                            <i class="fas fa-plus-circle text-blue-600 text-xl"></i>
-                            <h3 class="font-bold text-slate-700 text-lg">Add Items to Bill</h3>
-                        </div>
-                        <div class="flex space-x-4">
-                            <select id="bill-item-select" class="flex-1 font-semibold text-slate-700">
+                        <h3 class="font-bold text-slate-700 mb-6 flex items-center gap-2"><i class="fas fa-plus-circle text-blue-600"></i> Add Items to Bill</h3>
+                        <div class="flex gap-4">
+                            <select id="item-select" class="flex-grow font-semibold text-slate-600">
                                 <option value="">-- Select an Item --</option>
+                                <option value="15.000">Wedding Shoot (15.000 OMR)</option>
+                                <option value="5.000">Passport Photo (5.000 OMR)</option>
+                                <option value="2.500">Print 4x6 (2.500 OMR)</option>
                             </select>
-                            <div class="flex flex-col items-center">
-                                <span class="text-[10px] font-bold text-slate-400 mb-1">QTY</span>
-                                <input id="bill-qty" type="number" value="1" min="1" class="w-20 text-center font-bold">
-                            </div>
-                            <button onclick="addItemToCart()" class="btn-dark px-10 self-end h-[50px]">ADD</button>
+                            <input id="item-qty" type="number" value="1" min="1" class="w-20 text-center font-bold">
+                            <button onclick="addToCart()" class="bg-slate-900 text-white px-8 rounded-xl font-bold hover:scale-105 transition">ADD</button>
                         </div>
                     </div>
                 </div>
 
-                <div class="card p-8 flex flex-col h-fit shadow-xl border-t-8 border-slate-900 sticky top-10">
+                <div class="invoice-card p-8 flex flex-col h-fit sticky top-10">
                     <div class="flex justify-between items-center mb-10">
-                        <h3 class="font-black text-slate-800 tracking-tighter text-lg">INVOICE SUMMARY</h3>
-                        <i class="fas fa-shopping-cart text-slate-200"></i>
+                        <h3 class="font-extrabold tracking-tight">INVOICE SUMMARY</h3>
+                        <i class="fas fa-shopping-cart text-slate-600"></i>
                     </div>
                     
-                    <div id="cart-items" class="space-y-4 mb-12 min-h-[120px]">
-                        <div class="text-center py-10 flex flex-col items-center">
-                            <i class="fas fa-shopping-basket text-slate-100 text-5xl mb-3"></i>
-                            <p class="text-slate-300 text-xs font-bold uppercase tracking-widest">Empty Cart</p>
+                    <div id="cart-items" class="space-y-4 mb-10 min-h-[100px]">
+                        <div class="text-center opacity-20 py-10">
+                            <i class="fas fa-shopping-basket text-4xl mb-2"></i>
+                            <p class="text-xs font-bold uppercase">Empty Cart</p>
                         </div>
                     </div>
 
-                    <div class="border-t border-dashed border-slate-200 pt-6 flex justify-between items-center mb-8">
-                        <span class="font-bold text-slate-400 text-sm">GRAND TOTAL</span>
-                        <span class="text-blue-600 text-3xl font-black"><span class="text-sm mr-1">OMR</span><span id="cart-grand-total">0.000</span></span>
+                    <div class="border-t border-slate-800 pt-6 mb-8">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">GRAND TOTAL</span>
+                            <span class="text-3xl font-black text-blue-500" id="grand-total">0.000</span>
+                        </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3 mb-6">
-                        <select class="!py-2 !text-[11px] font-bold"><option>MARK PAID</option><option>DUE</option></select>
-                        <select class="!py-2 !text-[11px] font-bold"><option>CASH</option><option>ONLINE</option></select>
+                    <div class="grid grid-cols-2 gap-2 mb-6">
+                        <select class="!bg-slate-800 !text-white text-[10px] font-bold"><option>MARK PAID</option><option>DUE</option></select>
+                        <select class="!bg-slate-800 !text-white text-[10px] font-bold"><option>CASH</option><option>ONLINE</option></select>
                     </div>
 
-                    <button id="btn-generate" onclick="finalizeInvoice()" class="w-full bg-slate-200 text-slate-400 py-4 rounded-2xl font-black text-sm tracking-widest cursor-not-allowed transition-all" disabled>CONFIRM & GENERATE</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="inventory" class="section">
-            <h1 class="text-3xl font-black text-slate-800 mb-8">Inventory Management</h1>
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-                <div class="lg:col-span-3 card p-8">
-                    <table class="w-full text-sm">
-                        <thead>
-                            <tr class="text-slate-400 font-bold text-[11px] uppercase tracking-widest border-b">
-                                <th class="text-left pb-4">Item</th>
-                                <th class="text-left pb-4">Category</th>
-                                <th class="text-left pb-4">Stock</th>
-                                <th class="text-left pb-4">Price</th>
-                                <th class="text-right pb-4">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody id="inventory-table-body" class="divide-y divide-slate-50">
-                            </tbody>
-                    </table>
-                </div>
-                <div class="card p-8 h-fit bg-slate-50 border-none">
-                    <h3 class="font-bold text-blue-600 mb-6 flex items-center"><i class="fas fa-plus mr-2"></i> Add Stock</h3>
-                    <div class="space-y-4">
-                        <input id="inv-name" type="text" placeholder="Item Name" class="w-full !bg-white border-slate-100 border !border-solid shadow-sm">
-                        <select id="inv-cat" class="w-full !bg-white border-slate-100 border !border-solid shadow-sm font-semibold">
-                            <option>Camera</option><option>Lenses</option><option>Studio Services</option><option>Printing</option>
-                        </select>
-                        <input id="inv-price" type="number" step="0.001" placeholder="Price (OMR)" class="w-full !bg-white border-slate-100 border !border-solid shadow-sm">
-                        <input id="inv-stock" type="number" placeholder="Initial Stock" class="w-full !bg-white border-slate-100 border !border-solid shadow-sm">
-                        <button onclick="addItemToInventory()" class="btn-primary w-full shadow-lg shadow-blue-500/30 mt-4">Add to Assets</button>
-                    </div>
+                    <button id="confirm-btn" onclick="processInvoice()" class="btn-confirm" disabled>CONFIRM & GENERATE</button>
                 </div>
             </div>
         </div>
 
         <div id="invoices" class="section">
-            <h1 class="text-3xl font-black text-slate-800 mb-8">Invoice Registry</h1>
-            <div id="registry-container" class="grid gap-4">
-                <div class="card p-20 flex flex-col items-center text-slate-300">
+            <h2 class="text-3xl font-black text-slate-800 mb-8 tracking-tight">Invoice Registry</h2>
+            <div id="invoice-list" class="grid gap-4">
+                <div class="card p-20 flex flex-col items-center justify-center text-slate-300">
                     <i class="far fa-file-alt text-6xl mb-4 opacity-20"></i>
                     <p class="font-bold">No invoices found in registry</p>
                 </div>
@@ -244,93 +188,28 @@
     </main>
 
     <script>
-        let inventory = JSON.parse(localStorage.getItem('sigma_inventory')) || [];
-        let invoices = JSON.parse(localStorage.getItem('sigma_invoices')) || [];
         let cart = [];
+        let totalSales = 0;
+        let invoiceRegistry = [];
 
-        function showSection(id) {
+        function showTab(tabId) {
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.getElementById('nav-'+id).classList.add('active');
-            if(id === 'inventory') renderInventory();
-            if(id === 'billing') populateBillingDropdown();
-            if(id === 'invoices') renderInvoices();
-            if(id === 'dashboard') updateDashboard();
+            document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.getElementById('tab-' + tabId).classList.add('active');
         }
 
-        // --- Inventory Logic ---
-        function addItemToInventory() {
-            const name = document.getElementById('inv-name').value;
-            const cat = document.getElementById('inv-cat').value;
-            const price = parseFloat(document.getElementById('inv-price').value || 0).toFixed(3);
-            const stock = parseInt(document.getElementById('inv-stock').value || 0);
+        function addToCart() {
+            const select = document.getElementById('item-select');
+            const price = parseFloat(select.value);
+            const qty = parseInt(document.getElementById('item-qty').value);
+            const itemName = select.options[select.selectedIndex].text.split(' (')[0];
 
-            if(!name || price <= 0) return alert("Please enter valid details");
+            if(!price) return;
 
-            inventory.push({ name, cat, price, stock });
-            localStorage.setItem('sigma_inventory', JSON.stringify(inventory));
-            
-            // Clear inputs
-            document.getElementById('inv-name').value = '';
-            document.getElementById('inv-price').value = '';
-            document.getElementById('inv-stock').value = '';
-            renderInventory();
-        }
-
-        function renderInventory() {
-            const tbody = document.getElementById('inventory-table-body');
-            tbody.innerHTML = inventory.length ? '' : '<tr><td colspan="5" class="text-center py-10 text-slate-400 font-medium">No items found</td></tr>';
-            inventory.forEach((item, index) => {
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition font-semibold text-slate-600">
-                        <td class="py-5">${item.name}</td>
-                        <td class="text-xs font-bold text-slate-400 uppercase tracking-tighter">${item.cat}</td>
-                        <td><span class="px-3 py-1 rounded-lg ${item.stock < 5 ? 'bg-rose-50 text-rose-500' : 'bg-slate-100 text-slate-500'}">${item.stock}</span></td>
-                        <td class="font-bold text-slate-800">${item.price}</td>
-                        <td class="text-right"><button onclick="deleteInv(${index})" class="text-slate-200 hover:text-rose-500 transition"><i class="fas fa-trash"></i></button></td>
-                    </tr>
-                `;
-            });
-        }
-
-        function deleteInv(index) {
-            inventory.splice(index, 1);
-            localStorage.setItem('sigma_inventory', JSON.stringify(inventory));
-            renderInventory();
-        }
-
-        // --- Billing Logic ---
-        function populateBillingDropdown() {
-            const select = document.getElementById('bill-item-select');
-            select.innerHTML = '<option value="">-- Select an Item --</option>';
-            inventory.forEach((item, index) => {
-                select.innerHTML += `<option value="${index}">${item.name} (${item.price} OMR)</option>`;
-            });
-        }
-
-        function addItemToCart() {
-            const idx = document.getElementById('bill-item-select').value;
-            const qty = parseInt(document.getElementById('bill-qty').value);
-            if(idx === "") return;
-
-            const item = inventory[idx];
-            const total = (item.price * qty).toFixed(3);
-            cart.push({ name: item.name, price: item.price, qty, total });
+            cart.push({ name: itemName, price: price, qty: qty, total: (price * qty) });
             renderCart();
         }
 
         function renderCart() {
-            const container = document.getElementById('cart-items');
-            const btn = document.getElementById('btn-generate');
-            container.innerHTML = '';
-            let grandTotal = 0;
-
-            if(!cart.length) {
-                container.innerHTML = `<div class="text-center py-10 flex flex-col items-center">
-                    <i class="fas fa-shopping-basket text-slate-100 text-5xl mb-3"></i>
-                    <p class="text-slate-300 text-xs font-bold uppercase tracking-widest">Empty Cart</p>
-                </div>`;
-                document.getElementById('cart-grand-total').innerText = "0.000";
-                btn.disabled = true;
-                btn.className = "w-full bg-slate-200 text-slate-
+            const container = document.getElementById('cart
