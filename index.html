@@ -10,40 +10,37 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; margin: 0; }
         
-        /* Sidebar - Exact from Screenshot */
-        .sidebar { background-color: #111827; width: 260px; height: 100vh; position: fixed; left: 0; top: 0; padding: 24px; color: white; }
-        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: #9ca3af; border-radius: 10px; font-weight: 500; margin-bottom: 4px; cursor: pointer; }
+        /* SIDEBAR - EXACT COLORS FROM SCREENSHOT */
+        .sidebar { background-color: #0f172a; width: 260px; height: 100vh; position: fixed; left: 0; top: 0; padding: 24px; color: white; }
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 18px; color: #94a3b8; border-radius: 12px; font-weight: 600; margin-bottom: 8px; cursor: pointer; text-decoration: none; }
         .nav-link.active { background-color: #2563eb; color: white; }
         .nav-link:hover:not(.active) { background-color: rgba(255,255,255,0.05); }
 
         .main-content { margin-left: 260px; padding: 40px; }
-        .card { background: white; border-radius: 20px; padding: 24px; border: 1px solid #f1f5f9; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
         
-        /* Table Style - Exact from Screenshot */
+        /* CARD DESIGN FROM SCREENSHOT */
+        .card { background: white; border-radius: 24px; padding: 32px; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px -5px rgba(0,0,0,0.05); }
+        
+        /* SALES & DUES TABLE - EXACT REPLICATION */
         .stats-table { width: 100%; border-collapse: collapse; }
-        .stats-table th { text-align: left; color: #9ca3af; font-size: 11px; text-transform: uppercase; padding-bottom: 20px; }
-        .stats-table td { padding: 15px 0; font-weight: 700; border-bottom: 1px solid #f8fafc; }
-        .val-sales { color: #111827; text-align: center; }
-        .val-receipts { color: #10b981; text-align: center; }
-        .val-dues { color: #ef4444; text-align: right; }
+        .stats-table th { text-align: left; color: #94a3b8; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding-bottom: 20px; }
+        .stats-table td { padding: 16px 0; font-weight: 700; border-bottom: 1px solid #f8fafc; font-size: 14px; }
+        .val-black { color: #0f172a; text-align: center; }
+        .val-green { color: #10b981; text-align: center; }
+        .val-red { color: #ef4444; text-align: right; }
 
         .page-section { display: none; }
         .page-section.active { display: block; }
         
-        .input-box { background-color: #f9fafb; border: 1px solid #f3f4f6; border-radius: 12px; padding: 14px; width: 100%; outline: none; }
-        
-        @media print {
-            .no-print { display: none !important; }
-            #print-receipt { display: block !important; }
-        }
+        .input-box { background-color: #f8fafc; border: 1.5px solid #edf2f7; border-radius: 14px; padding: 14px; width: 100%; outline: none; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar no-print">
+    <div class="sidebar">
         <div class="flex items-center gap-3 mb-10 px-2">
-            <div class="bg-blue-600 p-2 rounded-lg"><i class="fas fa-camera text-white"></i></div>
-            <h1 class="text-white font-bold text-lg">SIGMA STUDIO</h1>
+            <div class="bg-blue-600 p-2 rounded-xl"><i class="fas fa-camera text-white"></i></div>
+            <h1 class="text-white font-extrabold tracking-tight">SIGMA STUDIO</h1>
         </div>
         <nav>
             <div onclick="showPage('dashboard')" id="nav-dashboard" class="nav-link active"><i class="fas fa-th-large"></i> Dashboard</div>
@@ -51,7 +48,7 @@
             <div onclick="showPage('invoices')" id="nav-invoices" class="nav-link"><i class="fas fa-file-invoice"></i> Invoices</div>
             <div onclick="showPage('inventory')" id="nav-inventory" class="nav-link"><i class="fas fa-box"></i> Inventory</div>
         </nav>
-        <div class="absolute bottom-10 left-6 right-6">
+        <div class="absolute bottom-8 left-6 right-6 pt-6 border-t border-slate-800">
             <div class="nav-link"><i class="fas fa-cog"></i> Settings</div>
         </div>
     </div>
@@ -59,66 +56,63 @@
     <div class="main-content">
         
         <div id="dashboard" class="page-section active">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-3xl font-bold text-slate-900">Dashboard</h2>
-                <button onclick="showPage('billing')" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold shadow-lg shadow-blue-200">+ New Invoice</button>
+            <div class="flex justify-between items-center mb-10">
+                <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Dashboard</h2>
+                <button onclick="showPage('billing')" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-blue-200">
+                    + New Invoice
+                </button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-2 card">
-                    <div class="flex justify-between mb-20"><h3 class="font-bold text-slate-800">Expense Overview</h3> <span class="text-xs text-slate-400 font-bold uppercase">This Month <i class="fas fa-chevron-down ml-1"></i></span></div>
-                    <div class="text-center py-20">
-                        <i class="fas fa-wave-square text-slate-100 text-5xl mb-4"></i>
-                        <p class="text-slate-300 text-xs font-bold italic">No expenses recorded for this period</p>
+                    <div class="flex justify-between items-center mb-24">
+                        <h3 class="font-bold text-slate-700">Expense Overview</h3>
+                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">This Month <i class="fas fa-chevron-down ml-1"></i></span>
+                    </div>
+                    <div class="text-center py-10 opacity-20">
+                        <i class="fas fa-wave-square text-6xl mb-4"></i>
+                        <p class="text-xs font-bold tracking-widest uppercase">No expenses recorded for this period</p>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3 class="font-bold text-slate-800 mb-8 flex items-center gap-2">Sales & Dues <i class="far fa-question-circle text-slate-200"></i></h3>
+                    <h3 class="font-bold text-slate-700 mb-8 flex items-center gap-2">Sales & Dues <i class="far fa-question-circle text-slate-200"></i></h3>
                     <table class="stats-table">
                         <thead>
                             <tr><th>Period</th><th class="text-center">Sales</th><th class="text-center">Receipts</th><th class="text-right">Dues</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td class="text-slate-400">Today</td><td class="val-sales" id="d-today">0.000</td><td class="val-receipts">0.000</td><td class="val-dues">0.000</td></tr>
-                            <tr><td class="text-slate-400">This Week</td><td class="val-sales">0.000</td><td class="val-receipts">0.000</td><td class="val-dues">0.000</td></tr>
-                            <tr><td class="text-slate-400">This Month</td><td class="val-sales">0.000</td><td class="val-receipts">0.000</td><td class="val-dues">0.000</td></tr>
-                            <tr><td class="text-slate-400">This Quarter</td><td class="val-sales">0.000</td><td class="val-receipts">0.000</td><td class="val-dues">0.000</td></tr>
-                            <tr><td class="text-slate-400 border-none">This Year</td><td class="val-sales border-none">0.000</td><td class="val-receipts border-none">0.000</td><td class="val-dues border-none">0.000</td></tr>
+                            <tr><td class="text-slate-400">Today</td><td class="val-black" id="d-today">0.000</td><td class="val-green">0.000</td><td class="val-red">0.000</td></tr>
+                            <tr><td class="text-slate-400">This Week</td><td class="val-black">0.000</td><td class="val-green">0.000</td><td class="val-red">0.000</td></tr>
+                            <tr><td class="text-slate-400">This Month</td><td class="val-black">0.000</td><td class="val-green">0.000</td><td class="val-red">0.000</td></tr>
+                            <tr><td class="text-slate-400">This Quarter</td><td class="val-black">0.000</td><td class="val-green">0.000</td><td class="val-red">0.000</td></tr>
+                            <tr><td class="text-slate-400 border-none">This Year</td><td class="val-black border-none">0.000</td><td class="val-green border-none">0.000</td><td class="val-red border-none">0.000</td></tr>
                         </tbody>
                     </table>
-                    <button class="w-full mt-10 text-blue-600 font-bold text-[11px] uppercase tracking-widest">View Detailed History <i class="fas fa-arrow-right ml-1"></i></button>
+                    <button class="w-full mt-10 text-blue-600 font-extrabold text-[11px] uppercase tracking-widest hover:underline">View Detailed History <i class="fas fa-arrow-right ml-1"></i></button>
                 </div>
             </div>
         </div>
 
         <div id="billing" class="page-section">
-            <h2 class="text-3xl font-bold text-slate-900 mb-8">Billing Counter</h2>
+            <h2 class="text-3xl font-extrabold text-slate-800 mb-10 tracking-tight">Billing Counter</h2>
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-2 space-y-6">
                     <div class="card">
-                        <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2 text-blue-600"><i class="far fa-user"></i> Customer Details</h3>
+                        <h3 class="font-bold text-slate-700 mb-6 flex items-center gap-2"><i class="far fa-user text-blue-500"></i> Customer Details</h3>
                         <div class="grid grid-cols-2 gap-4">
                             <input id="cName" type="text" placeholder="Client Name" class="input-box col-span-2">
                             <input id="cPhone" type="text" placeholder="+968" class="input-box">
                             <input type="text" placeholder="Address / Location" class="input-box">
                         </div>
                     </div>
-                    <div class="card">
-                        <h3 class="font-bold text-slate-800 mb-6 flex items-center gap-2 text-blue-600"><i class="fas fa-box-open"></i> Add Items to Bill</h3>
-                        <div class="flex gap-4">
-                            <select id="itemSel" class="input-box flex-grow"><option value="0">-- Select an Item --</option><option value="15.000">Wedding Shoot (15.000)</option><option value="5.000">Passport Photo (5.000)</option></select>
-                            <input id="itemQty" type="number" value="1" class="input-box w-20 text-center">
-                            <button onclick="addToBill()" class="bg-[#111827] text-white px-8 rounded-xl font-bold">ADD</button>
-                        </div>
-                    </div>
                 </div>
-                <div class="card bg-[#111827] text-white flex flex-col">
-                    <div class="flex justify-between items-center mb-10"><h3 class="font-bold text-xs uppercase tracking-widest">Invoice Summary</h3><i class="fas fa-shopping-cart"></i></div>
-                    <div id="cartItems" class="flex-grow space-y-4 py-10 text-center opacity-20"><i class="fas fa-shopping-basket text-4xl mb-2"></i><p class="text-[10px] font-bold">Empty Cart</p></div>
+                <div class="card bg-[#0f172a] text-white">
+                    <h3 class="font-bold text-xs uppercase tracking-widest opacity-50 mb-10">Invoice Summary</h3>
+                    <div class="py-20 text-center opacity-20"><i class="fas fa-shopping-basket text-4xl mb-4"></i><p class="font-bold text-[10px]">EMPTY CART</p></div>
                     <div class="border-t border-slate-800 pt-6 mt-10">
                         <div class="flex justify-between items-end mb-8"><span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Grand Total</span><span class="text-3xl font-black text-blue-500" id="gTotal">0.000</span></div>
-                        <button onclick="finishBill()" class="w-full bg-[#64748b] py-4 rounded-2xl font-bold uppercase text-xs tracking-widest">Confirm & Generate</button>
+                        <button class="w-full bg-slate-500 py-4 rounded-2xl font-bold uppercase text-[11px] tracking-widest">Confirm & Generate</button>
                     </div>
                 </div>
             </div>
@@ -126,59 +120,12 @@
 
     </div>
 
-    <div id="print-receipt" class="hidden p-10 bg-white">
-        <center><h1 class="text-2xl font-black">SIGMA STUDIO</h1><hr class="my-6"></center>
-        <div class="flex justify-between mb-8"><p>Customer: <b id="pName"></b></p><p>Date: <span id="pDate"></span></p></div>
-        <table class="w-full mb-8 border-b-2 border-black text-left"><thead><tr><th class="pb-2">Description</th><th class="text-right pb-2">Amount</th></tr></thead><tbody id="pList"></tbody></table>
-        <h2 class="text-right text-2xl font-black">Total: <span id="pTotal"></span> OMR</h2>
-    </div>
-
     <script>
-        let todayVal = 0;
-        let cart = [];
-
         function showPage(id) {
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.getElementById('nav-' + id).classList.add('active');
-        }
-
-        function addToBill() {
-            const sel = document.getElementById('itemSel');
-            const qty = parseInt(document.getElementById('itemQty').value) || 1;
-            const price = parseFloat(sel.value);
-            if(price <= 0) return;
-            cart.push({ name: sel.options[sel.selectedIndex].text.split(' (')[0], price: price * qty });
-            updateCart();
-        }
-
-        function updateCart() {
-            const box = document.getElementById('cartItems');
-            box.innerHTML = '';
-            let t = 0;
-            cart.forEach(i => {
-                t += i.price;
-                box.innerHTML += `<div class="flex justify-between text-sm font-bold"><span>${i.name}</span><span class="text-blue-400">${i.price.toFixed(3)}</span></div>`;
-            });
-            document.getElementById('gTotal').innerText = t.toFixed(3);
-        }
-
-        function finishBill() {
-            const total = parseFloat(document.getElementById('gTotal').innerText);
-            if(total <= 0) return;
-            document.getElementById('pName').innerText = document.getElementById('cName').value || "Walking Customer";
-            document.getElementById('pDate').innerText = new Date().toLocaleString();
-            document.getElementById('pTotal').innerText = total.toFixed(3);
-            const list = document.getElementById('pList');
-            list.innerHTML = '';
-            cart.forEach(i => { list.innerHTML += `<tr><td class="py-2">${i.name}</td><td class="text-right font-bold">${i.price.toFixed(3)}</td></tr>`; });
-            
-            todayVal += total;
-            document.getElementById('d-today').innerText = todayVal.toFixed(3);
-            
-            window.print();
-            cart = []; updateCart(); showPage('dashboard');
         }
     </script>
 </body>
