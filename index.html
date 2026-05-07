@@ -7,22 +7,24 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { background-color: #f8fafc; font-family: 'Inter', sans-serif; }
-        .sidebar { background-color: #0f172a; min-height: 100vh; transition: all 0.3s; }
+        body { background-color: #f1f5f9; font-family: 'Inter', sans-serif; }
+        .sidebar { background-color: #0f172a; min-height: 100vh; }
         .nav-item { color: #94a3b8; transition: 0.2s; cursor: pointer; }
         .nav-item:hover, .nav-item.active { color: white; background-color: #2563eb; border-radius: 8px; }
-        .card { background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        .card { background: white; border-radius: 16px; box-shadow: 0 4px 20px -5px rgb(0 0 0 / 0.05); }
         .section { display: none; }
         .section.active { display: block; }
+        .stat-card { transition: transform 0.2s; cursor: pointer; }
+        .stat-card:hover { transform: translateY(-5px); }
     </style>
 </head>
 <body>
 
 <div class="flex">
-    <div class="sidebar w-64 p-5 fixed h-full">
-        <div class="flex items-center space-x-3 mb-10 p-2 bg-blue-600 rounded-lg">
+    <div class="sidebar w-64 p-5 fixed h-full shadow-2xl">
+        <div class="flex items-center space-x-3 mb-10 p-3 bg-blue-600 rounded-xl shadow-lg shadow-blue-500/30">
             <i class="fas fa-camera text-white text-xl"></i>
-            <span class="text-white font-bold text-lg">SIGMA STUDIO</span>
+            <span class="text-white font-bold text-lg tracking-tight">SIGMA STUDIO</span>
         </div>
         
         <nav class="space-y-2">
@@ -45,262 +47,202 @@
         </div>
     </div>
 
-    <div class="ml-64 w-full p-8">
-        
-        <div id="dashboard" class="section active">
-            <div class="flex justify-between items-center mb-8">
-                <h1 class="text-3xl font-bold text-slate-800">Dashboard</h1>
-                <button onclick="showSection('billing')" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">+ New Invoice</button>
+    <div class="ml-64 w-full min-h-screen">
+        <header class="bg-white p-4 px-8 flex justify-between items-center sticky top-0 z-10 border-b border-slate-100">
+            <div class="relative w-96">
+                <i class="fas fa-search absolute left-3 top-3 text-slate-300"></i>
+                <input type="text" placeholder="Search..." class="w-full bg-slate-50 rounded-full py-2 pl-10 pr-4 outline-none border focus:border-blue-400 transition">
             </div>
+            <div class="flex items-center space-x-4">
+                <i class="far fa-bell text-slate-400 text-lg cursor-pointer hover:text-blue-600 transition"></i>
+                <div class="w-8 h-8 bg-slate-200 rounded-full flex items-center justify-center text-slate-500 cursor-pointer">
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </header>
+
+        <main class="p-8">
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="card p-6 min-h-[300px]">
-                    <p class="font-semibold mb-2 text-slate-700 w-full text-left">Recent Activity</p>
-                    <div id="activity-log" class="text-slate-400 text-sm italic py-10 text-center">No recent invoices found</div>
+            <div id="dashboard" class="section active">
+                <div class="flex justify-between items-center mb-8">
+                    <h1 class="text-2xl font-bold text-slate-800">Dashboard</h1>
+                    <button onclick="showSection('billing')" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-semibold hover:bg-blue-700 shadow-lg shadow-blue-600/20 transition-all active:scale-95">+ New Invoice</button>
                 </div>
                 
-                <div class="card p-6">
-                    <h3 class="font-bold text-slate-700 mb-4">Sales Summary</h3>
-                    <div class="text-center py-5">
-                        <p class="text-slate-500 text-sm">Total Revenue</p>
-                        <h2 id="total-revenue-display" class="text-4xl font-bold text-blue-600">0.000 OMR</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="billing" class="section">
-            <h1 class="text-3xl font-bold text-slate-800 mb-8">Billing Counter</h1>
-            <div class="grid grid-cols-3 gap-6">
-                <div class="col-span-2 space-y-6">
-                    <div class="card p-6">
-                        <h3 class="text-blue-600 font-bold mb-4 flex items-center"><i class="fas fa-user mr-2"></i> Customer Details</h3>
-                        <div class="grid grid-cols-2 gap-4">
-                            <input id="cust-name" type="text" placeholder="Client Name" class="p-3 bg-slate-50 border rounded-lg outline-none">
-                            <input id="cust-phone" type="text" placeholder="+968 Phone" class="p-3 bg-slate-50 border rounded-lg outline-none">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                    <div class="lg:col-span-2 card p-6 min-h-[350px] relative overflow-hidden">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="font-bold text-slate-800">Expense Overview</h3>
+                            <select class="text-xs text-slate-500 bg-slate-50 p-1 rounded outline-none border cursor-pointer"><option>THIS MONTH</option></select>
+                        </div>
+                        <div class="flex flex-col items-center justify-center h-64 text-center">
+                            <i class="fas fa-wave-square text-blue-100 text-6xl mb-4"></i>
+                            <p class="text-slate-400 text-sm">No expenses recorded for this period</p>
                         </div>
                     </div>
-                    <div class="card p-6">
-                        <h3 class="text-blue-600 font-bold mb-4 flex items-center"><i class="fas fa-box mr-2"></i> Add Items to Bill</h3>
-                        <div class="flex space-x-4">
-                            <select id="bill-item-select" class="flex-1 p-3 bg-slate-50 border rounded-lg">
-                                <option value="">-- Select Item --</option>
-                            </select>
-                            <input id="bill-qty" type="number" value="1" min="1" class="w-20 p-3 bg-slate-50 border rounded-lg text-center">
-                            <button onclick="addToBill()" class="bg-slate-900 text-white px-8 rounded-lg">ADD</button>
+                    
+                    <div class="card p-6 min-h-[350px]">
+                        <div class="flex items-center space-x-2 mb-6">
+                            <h3 class="font-bold text-slate-800">Sales & Dues</h3>
+                            <i class="far fa-question-circle text-slate-300 text-sm"></i>
                         </div>
-                    </div>
-                </div>
-                <div class="card p-6 h-fit text-center border-t-8 border-slate-900">
-                    <h3 class="font-bold mb-10 text-slate-800">INVOICE SUMMARY <i class="fas fa-shopping-cart ml-2"></i></h3>
-                    <div id="bill-summary-list" class="text-sm space-y-2 mb-10 text-left min-h-[100px]">
-                        <p class="text-slate-300 text-center py-10">Empty Cart</p>
-                    </div>
-                    <div class="border-t pt-4 flex justify-between items-center mb-6">
-                        <span class="font-bold text-slate-500">GRAND TOTAL</span>
-                        <span id="grand-total-display" class="text-2xl font-bold text-blue-600">0.000</span>
-                    </div>
-                    <button id="btn-generate" onclick="generateFinalInvoice()" class="w-full bg-slate-400 text-white py-3 rounded-lg" disabled>CONFIRM & GENERATE</button>
-                </div>
-            </div>
-        </div>
-
-        <div id="invoices" class="section">
-            <h1 class="text-3xl font-bold text-slate-800 mb-8">Invoice Registry</h1>
-            <div id="registry-container" class="space-y-4">
-                <div class="card p-20 flex flex-col items-center justify-center text-slate-400">
-                    <i class="fas fa-file-invoice text-5xl mb-4 opacity-20"></i>
-                    <p>No invoices found in registry</p>
-                </div>
-            </div>
-        </div>
-
-        <div id="inventory" class="section">
-            <h1 class="text-3xl font-bold text-slate-800 mb-8">Inventory Management</h1>
-            <div class="grid grid-cols-4 gap-6">
-                <div class="col-span-3 card p-6">
-                    <table class="w-full text-sm text-left">
-                        <thead class="border-b text-slate-400">
-                            <tr><th class="py-2">ITEM NAME</th><th class="py-2">PRICE</th><th class="py-2">STOCK</th></tr>
-                        </thead>
-                        <tbody id="inventory-list-body">
+                        <table class="w-full text-xs">
+                            <thead>
+                                <tr class="text-slate-400 border-b">
+                                    <th class="text-left font-medium py-2">PERIOD</th>
+                                    <th class="text-right font-medium py-2">SALES</th>
+                                    <th class="text-right font-medium py-2">RECEIPTS</th>
+                                    <th class="text-right font-medium py-2">DUES</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-slate-700 font-bold divide-y divide-slate-50" id="dash-sales-table">
+                                <tr>
+                                    <td class="py-4 text-slate-500 font-normal">Today</td>
+                                    <td class="text-right text-slate-800" id="sale-today">0.000</td>
+                                    <td class="text-right text-emerald-500" id="receipt-today">0.000</td>
+                                    <td class="text-right text-rose-500" id="due-today">0.000</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 text-slate-500 font-normal">This Week</td>
+                                    <td class="text-right text-slate-800" id="sale-week">0.000</td>
+                                    <td class="text-right text-emerald-500">0.000</td>
+                                    <td class="text-right text-rose-500">0.000</td>
+                                </tr>
+                                <tr>
+                                    <td class="py-4 text-slate-500 font-normal">This Month</td>
+                                    <td class="text-right text-slate-800" id="sale-month">0.000</td>
+                                    <td class="text-right text-emerald-500">0.000</td>
+                                    <td class="text-right text-rose-500">0.000</td>
+                                </tr>
                             </tbody>
-                    </table>
+                        </table>
+                        <div class="mt-6 pt-4 border-t text-center">
+                            <button class="text-blue-600 text-xs font-bold hover:underline">VIEW DETAILED HISTORY <i class="fas fa-arrow-right ml-1"></i></button>
+                        </div>
+                    </div>
                 </div>
-                <div class="card p-6">
-                    <h3 class="text-blue-600 font-bold mb-4">+ Add Stock</h3>
-                    <input id="inv-name" type="text" placeholder="Item Name" class="w-full p-2 mb-3 bg-slate-50 border rounded">
-                    <input id="inv-price" type="number" placeholder="Price (OMR)" class="w-full p-2 mb-3 bg-slate-50 border rounded">
-                    <input id="inv-stock" type="number" placeholder="Initial Stock" class="w-full p-2 mb-3 bg-slate-50 border rounded">
-                    <button onclick="addNewItemToInventory()" class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">Add to Assets</button>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="card p-5 stat-card flex items-center justify-between">
+                        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600"><i class="fas fa-chart-line"></i></div>
+                        <div class="text-right"><p class="text-slate-400 text-[10px] font-bold">ANALYTICS</p></div>
+                    </div>
+                    <div class="card p-5 stat-card flex items-center justify-between">
+                        <div class="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center text-indigo-600"><i class="fas fa-poll"></i></div>
+                        <div class="text-right"><p class="text-slate-400 text-[10px] font-bold">REPORTS</p></div>
+                    </div>
+                    <div class="card p-5 stat-card flex items-center justify-between">
+                        <div class="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center text-amber-600"><i class="fas fa-file-alt"></i></div>
+                        <div class="text-right"><p class="text-slate-400 text-[10px] font-bold">INVOICES</p></div>
+                    </div>
+                    <div class="card p-5 stat-card flex items-center justify-between">
+                        <div class="w-10 h-10 bg-rose-50 rounded-lg flex items-center justify-center text-rose-600"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="text-right"><p class="text-slate-400 text-[10px] font-bold">LOW STOCK</p></div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="settings" class="section">
-            <h1 class="text-3xl font-bold text-slate-800 mb-8">Settings</h1>
-            <div class="card p-6 max-w-md">
-                <h3 class="font-bold mb-4">System Controls</h3>
-                <button onclick="resetData()" class="bg-red-100 text-red-600 px-4 py-2 rounded hover:bg-red-200">Clear All Data</button>
-                <p class="text-xs text-slate-400 mt-2">This will delete all invoices and inventory.</p>
+            <div id="billing" class="section">
+                <h1 class="text-2xl font-bold text-slate-800 mb-8">Billing Counter</h1>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <div class="lg:col-span-2 space-y-6">
+                        <div class="card p-6">
+                            <h3 class="text-blue-600 font-bold mb-6 flex items-center"><i class="far fa-user-circle mr-2"></i> Customer Details</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <input id="cust-name" type="text" placeholder="Client Name" class="p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-blue-400 transition">
+                                <input id="cust-phone" type="text" placeholder="+968 Phone" class="p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-blue-400 transition">
+                                <input id="cust-address" type="text" placeholder="Address / Location" class="p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-blue-400 transition md:col-span-2">
+                            </div>
+                        </div>
+                        <div class="card p-6">
+                            <h3 class="text-blue-600 font-bold mb-6 flex items-center"><i class="fas fa-plus-circle mr-2"></i> Add Items to Bill</h3>
+                            <div class="flex flex-wrap gap-4">
+                                <select id="bill-item-select" class="flex-1 min-w-[200px] p-3 bg-slate-50 border border-slate-100 rounded-xl outline-none focus:border-blue-400 appearance-none"></select>
+                                <div class="flex items-center bg-slate-50 border border-slate-100 rounded-xl px-2">
+                                    <span class="text-[10px] text-slate-400 mr-2 font-bold uppercase">Qty</span>
+                                    <input id="bill-qty" type="number" value="1" min="1" class="w-12 bg-transparent py-3 outline-none text-center font-bold">
+                                </div>
+                                <button onclick="addToBill()" class="bg-[#0f172a] text-white px-10 py-3 rounded-xl font-bold hover:bg-black transition active:scale-95">ADD</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card p-6 h-fit border-t-8 border-slate-900 sticky top-24 shadow-xl">
+                        <div class="flex justify-between items-center mb-10">
+                            <h3 class="font-black text-slate-800 tracking-tighter">INVOICE SUMMARY</h3>
+                            <i class="fas fa-shopping-cart text-slate-300"></i>
+                        </div>
+                        <div id="bill-summary-list" class="space-y-4 mb-10 min-h-[150px]">
+                            <div class="text-center py-10">
+                                <i class="fas fa-shopping-basket text-slate-100 text-5xl mb-2"></i>
+                                <p class="text-slate-300 text-xs font-bold uppercase tracking-widest">Empty Cart</p>
+                            </div>
+                        </div>
+                        <div class="border-t border-dashed pt-6 flex justify-between items-center mb-8">
+                            <span class="font-bold text-slate-400 text-sm">GRAND TOTAL</span>
+                            <span class="text-blue-600 text-3xl font-black"><span class="text-sm mr-1">OMR</span><span id="grand-total-display">0.000</span></span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mb-4">
+                            <select class="p-2 text-[10px] bg-slate-50 border rounded-lg font-bold"><option>MARK PAID</option><option>DUE</option></select>
+                            <select class="p-2 text-[10px] bg-slate-50 border rounded-lg font-bold"><option>CASH</option><option>CARD</option></select>
+                        </div>
+                        <button id="btn-generate" onclick="generateFinalInvoice()" class="w-full bg-slate-200 text-slate-400 py-4 rounded-2xl font-black text-sm tracking-widest transition-all cursor-not-allowed" disabled>CONFIRM & GENERATE</button>
+                    </div>
+                </div>
             </div>
-        </div>
 
+            <div id="invoices" class="section">
+                <h1 class="text-2xl font-bold text-slate-800 mb-8">Invoice Registry</h1>
+                <div id="registry-container" class="grid gap-4">
+                    <div class="card p-20 flex flex-col items-center justify-center text-slate-400">
+                        <i class="far fa-file-alt text-5xl mb-4 opacity-20"></i>
+                        <p>No invoices found in registry</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="inventory" class="section">
+                <div class="flex justify-between items-center mb-8">
+                    <h1 class="text-2xl font-bold text-slate-800">Inventory Management</h1>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    <div class="lg:col-span-3 card p-6 overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead>
+                                <tr class="text-slate-400 border-b">
+                                    <th class="pb-4 font-medium uppercase text-[10px] tracking-wider">Item Name</th>
+                                    <th class="pb-4 font-medium uppercase text-[10px] tracking-wider">Price (OMR)</th>
+                                    <th class="pb-4 font-medium uppercase text-[10px] tracking-wider">Stock</th>
+                                    <th class="pb-4 font-medium uppercase text-[10px] tracking-wider text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="inventory-list-body" class="divide-y divide-slate-50"></tbody>
+                        </table>
+                    </div>
+                    <div class="card p-6 h-fit bg-slate-50 border-none">
+                        <h3 class="text-blue-600 font-bold mb-6 flex items-center"><i class="fas fa-plus mr-2"></i> Add Stock</h3>
+                        <div class="space-y-4">
+                            <input id="inv-name" type="text" placeholder="Item Name" class="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-400">
+                            <input id="inv-price" type="number" placeholder="Price (0.000)" class="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-400">
+                            <input id="inv-stock" type="number" placeholder="Qty" class="w-full p-3 bg-white border border-slate-200 rounded-xl outline-none focus:border-blue-400">
+                            <button onclick="addNewItemToInventory()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:shadow-lg hover:shadow-blue-600/30 transition active:scale-95">Add to Assets</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
     </div>
 </div>
 
 <script>
-    // Data storage (Local Storage keeps data even after refresh)
-    let inventory = JSON.parse(localStorage.getItem('sigma_inv')) || [];
-    let invoices = JSON.parse(localStorage.getItem('sigma_bills')) || [];
+    // System Data
+    let inventory = JSON.parse(localStorage.getItem('sigma_inv_v2')) || [
+        { name: 'Passport Photo (8 Pcs)', price: '2.000', stock: 999 },
+        { name: 'Full Frame Portrait', price: '15.000', stock: 50 }
+    ];
+    let invoices = JSON.parse(localStorage.getItem('sigma_bills_v2')) || [];
     let currentCart = [];
 
     function showSection(sectionId) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-        document.getElementById(sectionId).classList.add('active');
-        const nav = document.getElementById('nav-' + sectionId);
-        if(nav) nav.classList.add('active');
-        
-        if(sectionId === 'inventory') renderInventory();
-        if(sectionId === 'billing') updateBillingDropdown();
-        if(sectionId === 'invoices') renderRegistry();
-        if(sectionId === 'dashboard') updateDashboard();
-    }
-
-    // --- INVENTORY LOGIC ---
-    function addNewItemToInventory() {
-        const name = document.getElementById('inv-name').value;
-        const price = document.getElementById('inv-price').value;
-        const stock = document.getElementById('inv-stock').value;
-
-        if(!name || !price) return alert("Please enter Name and Price");
-
-        inventory.push({ name, price: parseFloat(price).toFixed(3), stock: parseInt(stock) || 0 });
-        saveData();
-        renderInventory();
-        
-        // Clear inputs
-        document.getElementById('inv-name').value = '';
-        document.getElementById('inv-price').value = '';
-        document.getElementById('inv-stock').value = '';
-    }
-
-    function renderInventory() {
-        const body = document.getElementById('inventory-list-body');
-        body.innerHTML = inventory.length ? '' : '<tr><td colspan="3" class="text-center py-10 text-slate-400">No items found</td></tr>';
-        inventory.forEach(item => {
-            body.innerHTML += `<tr class="border-b text-slate-700"><td class="py-3">${item.name}</td><td>${item.price}</td><td>${item.stock}</td></tr>`;
-        });
-    }
-
-    // --- BILLING LOGIC ---
-    function updateBillingDropdown() {
-        const select = document.getElementById('bill-item-select');
-        select.innerHTML = '<option value="">-- Select Item --</option>';
-        inventory.forEach((item, index) => {
-            select.innerHTML += `<option value="${index}">${item.name} (${item.price} OMR)</option>`;
-        });
-    }
-
-    function addToBill() {
-        const idx = document.getElementById('bill-item-select').value;
-        const qty = parseInt(document.getElementById('bill-qty').value);
-        if(idx === "") return;
-
-        const item = inventory[idx];
-        currentCart.push({ name: item.name, price: item.price, qty: qty, total: (item.price * qty).toFixed(3) });
-        renderCart();
-    }
-
-    function renderCart() {
-        const container = document.getElementById('bill-summary-list');
-        const btn = document.getElementById('btn-generate');
-        container.innerHTML = '';
-        let grandTotal = 0;
-
-        currentCart.forEach(item => {
-            grandTotal += parseFloat(item.total);
-            container.innerHTML += `<div class="flex justify-between border-b py-2">
-                <span>${item.name} (x${item.qty})</span>
-                <span class="font-bold">${item.total}</span>
-            </div>`;
-        });
-
-        document.getElementById('grand-total-display').innerText = grandTotal.toFixed(3);
-        if(currentCart.length > 0) {
-            btn.classList.replace('bg-slate-400', 'bg-blue-600');
-            btn.disabled = false;
-        }
-    }
-
-    function generateFinalInvoice() {
-        const customer = document.getElementById('cust-name').value || "Walking Customer";
-        const total = document.getElementById('grand-total-display').innerText;
-        
-        const newInvoice = {
-            id: 'INV-' + (invoices.length + 1001),
-            customer: customer,
-            total: total,
-            date: new Date().toLocaleDateString(),
-            items: [...currentCart]
-        };
-
-        invoices.push(newInvoice);
-        saveData();
-        alert("Invoice Saved Successfully!");
-        
-        // Reset billing
-        currentCart = [];
-        document.getElementById('cust-name').value = '';
-        document.getElementById('cust-phone').value = '';
-        renderCart();
-        showSection('invoices');
-    }
-
-    // --- REGISTRY & DASHBOARD ---
-    function renderRegistry() {
-        const container = document.getElementById('registry-container');
-        container.innerHTML = invoices.length ? '' : '<div class="card p-20 text-center text-slate-400 italic">No invoices recorded</div>';
-        invoices.slice().reverse().forEach(inv => {
-            container.innerHTML += `<div class="card p-4 flex justify-between items-center hover:bg-slate-50 transition cursor-pointer">
-                <div>
-                    <h4 class="font-bold text-slate-800">${inv.id}</h4>
-                    <p class="text-xs text-slate-500">${inv.customer} | ${inv.date}</p>
-                </div>
-                <div class="text-blue-600 font-bold">${inv.total} OMR</div>
-            </div>`;
-        });
-    }
-
-    function updateDashboard() {
-        let revenue = 0;
-        invoices.forEach(inv => revenue += parseFloat(inv.total));
-        document.getElementById('total-revenue-display').innerText = revenue.toFixed(3) + " OMR";
-        
-        const log = document.getElementById('activity-log');
-        if(invoices.length > 0) {
-            const last = invoices[invoices.length -1];
-            log.innerHTML = `<div class="text-slate-800 font-bold">Last Sale: ${last.total} OMR</div><div class="text-xs">${last.customer}</div>`;
-            log.className = "py-10 text-center";
-        }
-    }
-
-    function saveData() {
-        localStorage.setItem('sigma_inv', JSON.stringify(inventory));
-        localStorage.setItem('sigma_bills', JSON.stringify(invoices));
-    }
-
-    function resetData() {
-        if(confirm("Are you sure? This will delete all data!")) {
-            localStorage.clear();
-            location.reload();
-        }
-    }
-
-    // Initial Load
-    updateDashboard();
-</script>
-
-</body>
-</html>
+        document.querySelectorAll('.nav
