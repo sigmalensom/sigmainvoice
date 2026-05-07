@@ -10,30 +10,67 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f3f4f6; margin: 0; overflow: hidden; }
         
-        /* Layout Structure */
         .sidebar { background-color: #0f172a; width: 260px; height: 100vh; position: fixed; left: 0; top: 0; color: white; padding: 24px; z-index: 100; display: flex; flex-direction: column; }
         .content { margin-left: 260px; padding: 30px; height: 100vh; overflow-y: auto; width: calc(100% - 260px); }
 
-        /* Navigation */
-        .nav-item { display: flex; align-items: center; gap: 12px; padding: 14px 18px; color: #94a3b8; text-decoration: none; border-radius: 12px; margin-bottom: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .nav-item { display: flex; align-items: center; gap: 12px; padding: 14px 18px; color: #94a3b8; border-radius: 12px; margin-bottom: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .nav-item:hover { background-color: rgba(37, 99, 235, 0.1); color: white; }
         .nav-item.active { background-color: #2563eb; color: white; }
 
-        /* UI Cards */
         .glass-card { background: white; border-radius: 20px; padding: 25px; border: 1px solid rgba(0,0,0,0.03); box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
         .billing-summary { background: #0f172a; color: white; border-radius: 24px; padding: 25px; height: fit-content; position: sticky; top: 0; }
         
         .input-field { background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 12px 16px; width: 100%; outline: none; transition: 0.3s; }
-        .input-field:focus { border-color: #2563eb; background: white; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
 
         .page-section { display: none; animation: fadeIn 0.3s ease-out; }
         .page-section.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* Print Styling */
+        @media print {
+            body * { visibility: hidden; }
+            #print-area, #print-area * { visibility: visible; }
+            #print-area { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; color: black !important; }
+            .no-print { display: none !important; }
+        }
     </style>
 </head>
 <body class="flex">
 
-    <div class="sidebar">
+    <div id="print-area" class="hidden">
+        <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 20px;">
+            <h1 style="font-size: 24px; font-weight: 800; margin: 0;">SIGMA STUDIO</h1>
+            <p style="font-size: 12px; margin: 5px 0;">Professional Photography & Videography</p>
+            <p style="font-size: 10px;">Salalah, Oman | Tel: +968 0000 0000</p>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 20px; font-size: 12px;">
+            <div>
+                <p><strong>Customer:</strong> <span id="print-cust-name"></span></p>
+                <p><strong>Phone:</strong> <span id="print-cust-phone"></span></p>
+            </div>
+            <div style="text-align: right;">
+                <p><strong>Date:</strong> <span id="print-date"></span></p>
+                <p><strong>Bill No:</strong> #SIG-<span id="print-bill-id"></span></p>
+            </div>
+        </div>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 12px;">
+            <thead>
+                <tr style="border-bottom: 1px solid #eee; text-align: left;">
+                    <th style="padding: 10px 0;">Description</th>
+                    <th style="text-align: right;">Amount (OMR)</th>
+                </tr>
+            </thead>
+            <tbody id="print-items"></tbody>
+        </table>
+        <div style="text-align: right; border-top: 2px solid #000; pt: 10px;">
+            <h2 style="font-size: 18px; font-weight: 800;">Total: <span id="print-total"></span> OMR</h2>
+        </div>
+        <div style="text-align: center; margin-top: 40px; font-size: 10px;">
+            <p>Thank you for choosing Sigma Studio!</p>
+        </div>
+    </div>
+
+    <div class="sidebar no-print">
         <div class="flex items-center gap-3 mb-10 px-2">
             <div class="bg-blue-600 p-2.5 rounded-xl shadow-lg"><i class="fas fa-camera text-white"></i></div>
             <h1 class="text-white font-extrabold tracking-tight text-lg uppercase">Sigma Studio</h1>
@@ -43,7 +80,6 @@
             <div onclick="switchPage('dash-page')" id="nav-dash-page" class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</div>
             <div onclick="switchPage('bill-page')" id="nav-bill-page" class="nav-item"><i class="fas fa-shopping-cart"></i> Create Bill</div>
             <div onclick="switchPage('inv-page')" id="nav-inv-page" class="nav-item"><i class="fas fa-file-invoice"></i> Invoices</div>
-            <div onclick="switchPage('stock-page')" id="nav-stock-page" class="nav-item"><i class="fas fa-box"></i> Inventory</div>
         </nav>
 
         <div class="mt-auto pt-6 border-t border-slate-800">
@@ -51,7 +87,7 @@
         </div>
     </div>
 
-    <div class="content">
+    <div class="content no-print">
         
         <div id="dash-page" class="page-section active">
             <div class="flex justify-between items-center mb-8">
@@ -62,28 +98,13 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 glass-card min-h-[350px] flex flex-col items-center justify-center border-dashed border-2 border-slate-100">
-                    <div class="w-full text-left mb-auto font-bold text-slate-700">Expense Overview</div>
-                    <i class="fas fa-chart-area text-5xl text-slate-100 mb-4"></i>
-                    <p class="text-slate-400">Monthly expense data will appear here</p>
+                <div class="lg:col-span-2 glass-card min-h-[300px] flex items-center justify-center text-slate-100">
+                    <i class="fas fa-chart-line text-6xl"></i>
                 </div>
-
                 <div class="glass-card">
-                    <h3 class="font-bold text-slate-700 mb-6">Sales & Dues</h3>
-                    <div class="space-y-5">
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-400 font-bold text-xs uppercase">Today</span>
-                            <span class="font-extrabold text-slate-800" id="dash-today">0.000</span>
-                        </div>
-                        <div class="flex justify-between items-center border-t border-slate-50 pt-5">
-                            <span class="text-slate-400 font-bold text-xs uppercase">This Week</span>
-                            <span class="font-extrabold text-slate-800">0.000</span>
-                        </div>
-                        <div class="flex justify-between items-center border-t border-slate-50 pt-5">
-                            <span class="text-slate-400 font-bold text-xs uppercase">This Month</span>
-                            <span class="font-extrabold text-slate-800">0.000</span>
-                        </div>
-                    </div>
+                    <h3 class="font-bold text-slate-700 mb-6 uppercase text-xs">Today's Sales</h3>
+                    <span class="text-4xl font-black text-slate-800" id="dash-today">0.000</span>
+                    <p class="text-xs text-slate-400 mt-2 font-bold tracking-widest">OMR</p>
                 </div>
             </div>
         </div>
@@ -96,18 +117,18 @@
                         <h3 class="font-bold text-slate-700 mb-6 flex items-center gap-2"><i class="far fa-user text-blue-600"></i> Customer Details</h3>
                         <div class="grid grid-cols-2 gap-4">
                             <input type="text" id="cust-name" placeholder="Client Name" class="input-field col-span-2">
-                            <input type="text" placeholder="+968 Phone" class="input-field">
+                            <input type="text" id="cust-phone" placeholder="+968 Phone" class="input-field">
                             <input type="text" placeholder="Location" class="input-field">
                         </div>
                     </div>
                     <div class="glass-card">
                         <h3 class="font-bold text-slate-700 mb-6 flex items-center gap-2"><i class="fas fa-plus-circle text-blue-600"></i> Add Items</h3>
                         <div class="flex gap-4">
-                            <select id="item-sel" class="input-field flex-grow font-semibold text-slate-600">
-                                <option value="0">-- Select Service/Item --</option>
-                                <option value="15.000">Wedding Photography (15.000)</option>
+                            <select id="item-sel" class="input-field flex-grow">
+                                <option value="0">-- Select --</option>
+                                <option value="15.000">Wedding Shoot (15.000)</option>
                                 <option value="5.000">Passport Photo (5.000)</option>
-                                <option value="2.000">Photo Print 4x6 (2.000)</option>
+                                <option value="10.000">Photo Restoration (10.000)</option>
                             </select>
                             <button onclick="addToCart()" class="bg-slate-900 text-white px-8 rounded-xl font-bold">ADD</button>
                         </div>
@@ -115,49 +136,25 @@
                 </div>
 
                 <div class="billing-summary">
-                    <h3 class="font-extrabold text-xs tracking-widest mb-8 uppercase">Invoice Summary</h3>
-                    <div id="cart-box" class="space-y-4 mb-8 min-h-[100px]">
-                        <div class="text-center opacity-20 py-10"><i class="fas fa-shopping-basket text-4xl"></i><p class="text-[10px] font-bold mt-2">EMPTY</p></div>
-                    </div>
+                    <h3 class="font-extrabold text-xs tracking-widest mb-8">INVOICE SUMMARY</h3>
+                    <div id="cart-box" class="space-y-4 mb-8"></div>
                     <div class="border-t border-slate-800 pt-6 mb-8 flex justify-between items-center">
                         <span class="text-xs font-bold text-slate-500 uppercase">Total OMR</span>
                         <span class="text-3xl font-black text-blue-500" id="grand-total">0.000</span>
                     </div>
-                    <button onclick="generateInvoice()" class="w-full bg-blue-600 py-4 rounded-2xl font-extrabold shadow-lg">CONFIRM BILL</button>
+                    <button onclick="generateInvoice()" class="w-full bg-blue-600 py-4 rounded-2xl font-extrabold shadow-lg">CONFIRM & PRINT</button>
                 </div>
             </div>
         </div>
 
         <div id="inv-page" class="page-section">
-            <h2 class="text-3xl font-extrabold mb-8 text-slate-800">Invoice Registry</h2>
-            <div id="registry-list" class="space-y-4">
-                <div class="glass-card text-center py-20 text-slate-300 font-bold uppercase text-xs">No records found</div>
-            </div>
-        </div>
-
-        <div id="stock-page" class="page-section">
-            <h2 class="text-3xl font-extrabold mb-8 text-slate-800">Inventory Management</h2>
-            <div class="glass-card p-10 text-center">
-                <i class="fas fa-boxes text-6xl text-slate-100 mb-6"></i>
-                <h4 class="text-slate-400 font-bold">Inventory module is ready to be configured.</h4>
-            </div>
+            <h2 class="text-3xl font-extrabold mb-8 text-slate-800">Invoices</h2>
+            <div id="registry-list" class="space-y-4"></div>
         </div>
 
         <div id="settings-page" class="page-section">
             <h2 class="text-3xl font-extrabold mb-8 text-slate-800">Settings</h2>
-            <div class="glass-card max-w-2xl">
-                <div class="space-y-6">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Studio Name</label>
-                        <input type="text" value="Sigma Studio" class="input-field">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-400 uppercase mb-2">Currency Symbol</label>
-                        <input type="text" value="OMR" class="input-field">
-                    </div>
-                    <button class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold">Save Changes</button>
-                </div>
-            </div>
+            <div class="glass-card">Sigma Studio Settings - V1.0</div>
         </div>
 
     </div>
@@ -167,17 +164,10 @@
         let activeCart = [];
 
         function switchPage(pageId) {
-            // Ella sections-um hide cheyyuka
             document.querySelectorAll('.page-section').forEach(p => p.classList.remove('active'));
-            // Sidebar active class remove cheyyuka
             document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            // Puthiya page show cheyyuka
-            const activePage = document.getElementById(pageId);
-            if(activePage) {
-                activePage.classList.add('active');
-                document.getElementById('nav-' + pageId).classList.add('active');
-            }
+            document.getElementById(pageId).classList.add('active');
+            document.getElementById('nav-' + pageId).classList.add('active');
         }
 
         function addToCart() {
@@ -203,22 +193,35 @@
 
         function generateInvoice() {
             const amount = parseFloat(document.getElementById('grand-total').innerText);
-            if(amount <= 0) return alert("Please add items to bill");
-            const name = document.getElementById('cust-name').value || "Guest Customer";
+            if(amount <= 0) return alert("Please add items");
             
+            const name = document.getElementById('cust-name').value || "Guest";
+            const phone = document.getElementById('cust-phone').value || "-";
+            const dateStr = new Date().toLocaleString();
+            const billId = Math.floor(Math.random() * 9000) + 1000;
+
+            // Update Print Area
+            document.getElementById('print-cust-name').innerText = name;
+            document.getElementById('print-cust-phone').innerText = phone;
+            document.getElementById('print-date').innerText = dateStr;
+            document.getElementById('print-bill-id').innerText = billId;
+            document.getElementById('print-total').innerText = amount.toFixed(3);
+            
+            const pItems = document.getElementById('print-items');
+            pItems.innerHTML = '';
+            activeCart.forEach(i => {
+                pItems.innerHTML += `<tr><td style="padding: 8px 0;">${i.name}</td><td style="text-align: right;">${i.price.toFixed(3)}</td></tr>`;
+            });
+
+            // Update Dash
             todaySales += amount;
             document.getElementById('dash-today').innerText = todaySales.toFixed(3);
 
-            const reg = document.getElementById('registry-list');
-            if(reg.innerText.includes("No records")) reg.innerHTML = '';
-            const item = document.createElement('div');
-            item.className = 'glass-card flex justify-between items-center mb-4 border-l-4 border-blue-500';
-            item.innerHTML = `<div><h4 class="font-bold text-slate-800">${name}</h4><p class="text-xs text-slate-400">${new Date().toLocaleTimeString()}</p></div><div class="text-right font-black text-slate-800">${amount.toFixed(3)} OMR</div>`;
-            reg.prepend(item);
+            // Print
+            window.print();
 
-            alert("Bill Generated Successfully!");
+            // Reset
             activeCart = [];
-            document.getElementById('cust-name').value = '';
             updateUI();
             switchPage('dash-page');
         }
