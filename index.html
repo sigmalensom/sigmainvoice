@@ -3,39 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sigma Studio Manager</title>
+    <title>Sigma Studio Manager - Gray Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; margin: 0; }
         
-        /* SIDEBAR - EXACT AS IMAGE */
-        .sidebar { background-color: #0f172a; width: 260px; height: 100vh; position: fixed; left: 0; top: 0; padding: 24px; color: white; z-index: 100; }
-        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 18px; color: #94a3b8; border-radius: 12px; font-weight: 600; margin-bottom: 8px; cursor: pointer; }
-        .nav-link.active { background-color: #2563eb; color: white; }
+        :root {
+            --bg-main: #f1f5f9;         /* Light Gray Background */
+            --sidebar-bg: #e2e8f0;      /* Soft Gray Sidebar */
+            --card-bg: #ffffff;         /* White Cards */
+            --accent-gray: #475569;     /* Slate Gray for Active State */
+            --text-primary: #1e293b;    /* Dark Slate for headings */
+            --text-secondary: #64748b;  /* Muted Gray for text */
+        }
 
-        .main-content { margin-left: 260px; padding: 40px; min-height: 100vh; }
-        .card { background: white; border-radius: 24px; padding: 24px; border: 1px solid #f1f5f9; box-shadow: 0 4px 20px rgba(0,0,0,0.02); }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg-main); margin: 0; color: var(--text-primary); }
         
-        /* BILLING ELEMENTS - EXACT AS IMAGE */
-        .input-field { background-color: #f8fafc; border: 1px solid #f1f5f9; border-radius: 16px; padding: 14px 20px; width: 100%; outline: none; color: #64748b; font-weight: 500; }
-        .summary-card { background: #fff; border-radius: 30px; border: 1px solid #f1f5f9; box-shadow: 0 10px 40px rgba(0,0,0,0.05); overflow: hidden; height: fit-content; }
-        .summary-header { background: #0f172a; color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 800; letter-spacing: 0.5px; }
+        /* SIDEBAR - GRAY THEME */
+        .sidebar { background-color: var(--sidebar-bg); width: 260px; height: 100vh; position: fixed; left: 0; top: 0; padding: 24px; border-right: 1px solid #cbd5e1; z-index: 100; }
+        .nav-link { display: flex; align-items: center; gap: 12px; padding: 12px 18px; color: var(--text-secondary); border-radius: 12px; font-weight: 600; margin-bottom: 8px; cursor: pointer; transition: 0.3s; }
+        .nav-link.active { background-color: var(--accent-gray); color: white; box-shadow: 0 4px 12px rgba(71, 85, 105, 0.2); }
+        .nav-link:hover:not(.active) { background-color: #cbd5e1; }
+
+        .main-content { margin-left: 260px; padding: 40px; }
+        .card { background: var(--card-bg); border-radius: 24px; padding: 24px; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        
+        /* TABLES */
+        .stats-table th { text-align: left; color: var(--text-secondary); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding-bottom: 20px; }
+        .stats-table td { padding: 16px 0; font-weight: 700; border-bottom: 1px solid #f1f5f9; font-size: 14px; }
+        
+        /* BUTTONS & INPUTS */
+        .btn-primary { background-color: var(--accent-gray); color: white; padding: 12px 24px; border-radius: 16px; font-weight: 700; transition: 0.3s; }
+        .btn-primary:hover { background-color: #334155; }
+        .input-field { background-color: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 16px; padding: 14px 20px; width: 100%; outline: none; color: var(--text-primary); }
 
         .page-section { display: none; }
         .page-section.active { display: block; }
 
-        .btn-add { background: #0f172a; color: white; padding: 14px 32px; border-radius: 14px; font-weight: 800; font-size: 12px; letter-spacing: 1px; }
-        .btn-generate { background: #94a3b8; color: white; width: 100%; padding: 16px; border-radius: 18px; font-weight: 800; text-transform: uppercase; font-size: 13px; }
+        /* INVOICE SUMMARY SIDEBAR */
+        .summary-card { background: #ffffff; border-radius: 30px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.03); }
+        .summary-header { background: var(--accent-gray); color: white; padding: 20px; display: flex; justify-content: space-between; align-items: center; }
     </style>
 </head>
 <body>
 
     <div class="sidebar">
-        <div class="flex items-center gap-3 mb-10 px-2">
-            <div class="bg-blue-600 p-2 rounded-xl"><i class="fas fa-camera text-white"></i></div>
-            <h1 class="text-white font-extrabold tracking-tight">SIGMA STUDIO</h1>
+        <div class="flex items-center gap-3 mb-12 px-2">
+            <div class="bg-slate-600 p-2 rounded-xl"><i class="fas fa-camera text-white"></i></div>
+            <h1 class="text-slate-800 font-extrabold tracking-tight text-lg">SIGMA STUDIO</h1>
         </div>
         <nav>
             <div onclick="showPage('dashboard')" id="nav-dashboard" class="nav-link active"><i class="fas fa-th-large"></i> Dashboard</div>
@@ -43,9 +59,6 @@
             <div onclick="showPage('invoices')" id="nav-invoices" class="nav-link"><i class="fas fa-file-invoice"></i> Invoices</div>
             <div onclick="showPage('inventory')" id="nav-inventory" class="nav-link"><i class="fas fa-box"></i> Inventory</div>
         </nav>
-        <div class="absolute bottom-8 left-6 right-6 pt-6 border-t border-slate-800">
-            <div class="nav-link"><i class="fas fa-cog"></i> Settings</div>
-        </div>
     </div>
 
     <div class="main-content">
@@ -53,38 +66,35 @@
         <div id="dashboard" class="page-section active">
             <div class="flex justify-between items-center mb-10">
                 <h2 class="text-3xl font-extrabold text-slate-800 tracking-tight">Dashboard</h2>
-                <button onclick="showPage('billing')" class="bg-blue-600 text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-blue-200">+ New Invoice</button>
+                <button onclick="showPage('billing')" class="btn-primary">+ New Invoice</button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div class="lg:col-span-2 card">
                     <div class="flex justify-between items-center mb-24">
                         <h3 class="font-bold text-slate-700">Expense Overview</h3>
-                        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">This Month <i class="fas fa-chevron-down ml-1"></i></span>
+                        <span class="text-xs font-bold text-slate-400 uppercase">This Month <i class="fas fa-chevron-down ml-1"></i></span>
                     </div>
-                    <div class="text-center py-10 opacity-20">
-                        <i class="fas fa-wave-square text-6xl mb-4"></i>
-                        <p class="text-xs font-bold tracking-widest uppercase">No expenses recorded for this period</p>
+                    <div class="text-center py-10 opacity-30">
+                        <i class="fas fa-chart-area text-6xl text-slate-200 mb-4"></i>
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest">No expenses recorded</p>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3 class="font-bold text-slate-700 mb-8 flex items-center gap-2">Sales & Dues <i class="far fa-question-circle text-slate-200"></i></h3>
-                    <table class="w-full">
+                    <h3 class="font-bold text-slate-700 mb-8 flex items-center gap-2">Sales & Dues <i class="far fa-question-circle text-slate-200 text-sm"></i></h3>
+                    <table class="w-full stats-table">
                         <thead>
-                            <tr class="text-[10px] text-slate-400 font-extrabold uppercase tracking-widest border-bottom">
-                                <th class="text-left pb-4">Period</th><th class="text-center pb-4">Sales</th><th class="text-center pb-4">Receipts</th><th class="text-right pb-4">Dues</th>
-                            </tr>
+                            <tr><th>Period</th><th class="text-center">Sales</th><th class="text-center">Receipts</th><th class="text-right">Dues</th></tr>
                         </thead>
-                        <tbody class="text-sm font-bold text-slate-700">
-                            <tr><td class="py-4 text-slate-400">Today</td><td class="text-center">0.000</td><td class="text-center text-emerald-500">0.000</td><td class="text-right text-red-500">0.000</td></tr>
-                            <tr><td class="py-4 text-slate-400">This Week</td><td class="text-center">0.000</td><td class="text-center text-emerald-500">0.000</td><td class="text-right text-red-500">0.000</td></tr>
-                            <tr><td class="py-4 text-slate-400">This Month</td><td class="text-center">0.000</td><td class="text-center text-emerald-500">0.000</td><td class="text-right text-red-500">0.000</td></tr>
-                            <tr><td class="py-4 text-slate-400">This Quarter</td><td class="text-center">0.000</td><td class="text-center text-emerald-500">0.000</td><td class="text-right text-red-500">0.000</td></tr>
-                            <tr><td class="py-4 text-slate-400">This Year</td><td class="text-center">0.000</td><td class="text-center text-emerald-500">0.000</td><td class="text-right text-red-500">0.000</td></tr>
+                        <tbody>
+                            <tr><td class="text-slate-400">Today</td><td class="text-center">0.000</td><td class="text-center text-emerald-500">0.000</td><td class="text-right text-red-400">0.000</td></tr>
+                            <tr><td class="text-slate-400">This Week</td><td class="text-center">0.000</td><td class="text-center text-emerald-500">0.000</td><td class="text-right text-red-400">0.000</td></tr>
+                            <tr><td class="text-slate-400">This Month</td><td class="text-center">0.000</td><td class="text-center text-emerald-500">0.000</td><td class="text-right text-red-400">0.000</td></tr>
+                            <tr><td class="text-slate-400">This Year</td><td class="text-center">0.000</td><td class="text-center text-emerald-500">0.000</td><td class="text-right text-red-400">0.000</td></tr>
                         </tbody>
                     </table>
-                    <button class="w-full mt-10 text-blue-600 font-extrabold text-[11px] uppercase tracking-widest hover:underline">View Detailed History <i class="fas fa-arrow-right ml-1"></i></button>
+                    <button class="w-full mt-10 text-slate-500 font-extrabold text-[11px] uppercase tracking-widest hover:text-slate-800 transition">View Detailed History <i class="fas fa-arrow-right ml-1"></i></button>
                 </div>
             </div>
         </div>
@@ -95,62 +105,40 @@
                 
                 <div class="lg:col-span-8 space-y-8">
                     <div class="card">
-                        <h3 class="font-bold text-slate-700 mb-8 flex items-center gap-3">
-                            <i class="far fa-user text-blue-500"></i> Customer Details
-                        </h3>
+                        <h3 class="font-bold text-slate-700 mb-8 flex items-center gap-3"><i class="far fa-user text-slate-400"></i> Customer Details</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <input type="text" placeholder="Client Name" class="input-field md:col-span-2">
                             <input type="text" placeholder="+968" class="input-field">
                             <input type="text" placeholder="Address / Location" class="input-field">
                         </div>
                     </div>
-
                     <div class="card">
-                        <h3 class="font-bold text-slate-700 mb-8 flex items-center gap-3">
-                            <i class="fas fa-box-open text-blue-500"></i> Add Items to Bill
-                        </h3>
+                        <h3 class="font-bold text-slate-700 mb-8 flex items-center gap-3"><i class="fas fa-box text-slate-400"></i> Add Items</h3>
                         <div class="flex gap-4 items-end">
                             <div class="flex-grow">
-                                <select class="input-field appearance-none bg-no-repeat bg-[right_20px_center]">
-                                    <option>-- Select an Item --</option>
-                                    <option>+ Add Custom Service</option>
-                                </select>
+                                <select class="input-field appearance-none"><option>-- Select an Item --</option></select>
                             </div>
-                            <div class="w-24">
-                                <label class="text-[10px] font-bold text-slate-400 uppercase ml-1 mb-2 block">Qty</label>
-                                <input type="number" value="1" class="input-field text-center">
-                            </div>
-                            <button class="btn-add">ADD</button>
+                            <div class="w-24"><input type="number" value="1" class="input-field text-center"></div>
+                            <button class="bg-slate-800 text-white px-8 py-4 rounded-2xl font-bold text-xs uppercase tracking-widest">Add</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="lg:col-span-4">
                     <div class="summary-card">
-                        <div class="summary-header">
-                            <span>INVOICE SUMMARY</span><i class="fas fa-shopping-cart"></i>
-                        </div>
+                        <div class="summary-header"><span>INVOICE SUMMARY</span><i class="fas fa-shopping-cart"></i></div>
                         <div class="p-8">
                             <div class="py-20 flex flex-col items-center justify-center text-slate-200">
                                 <i class="fas fa-shopping-basket text-5xl mb-4"></i>
-                                <p class="text-[11px] font-bold uppercase tracking-widest">Empty Cart</p>
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-slate-300">Empty Cart</p>
                             </div>
-                            
                             <div class="border-t border-slate-100 pt-8 mt-10">
-                                <div class="flex justify-between items-end mb-8">
-                                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Grand Total</span>
-                                    <span class="text-3xl font-black text-blue-600">0.000</span>
-                                </div>
-                                <div class="grid grid-cols-2 gap-3 mb-6">
-                                    <select class="input-field text-[11px] font-extrabold py-3"><option>MARK PAID</option></select>
-                                    <select class="input-field text-[11px] font-extrabold py-3"><option>CASH</option></select>
-                                </div>
-                                <button class="btn-generate">Confirm & Generate</button>
+                                <div class="flex justify-between items-end mb-8"><span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Grand Total</span><span class="text-3xl font-black text-slate-800">0.000</span></div>
+                                <button class="w-full bg-slate-300 text-slate-600 py-4 rounded-2xl font-bold uppercase text-xs tracking-widest">Confirm & Generate</button>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
 
